@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hawa Home Support</title>
+<style>
+  :root { --bg:#f5f6f8; --panel:#fff; --ink:#1d2330; --muted:#6b7280; --line:#e5e7eb;
+          --brand:#0f766e; --brand-soft:#e6f4f2; --user:#0f766e; --warn:#b42318; --warn-soft:#fdecea; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--ink); }
+  .app { display:grid; grid-template-columns:260px 1fr; height:100vh; max-width:1100px; margin:0 auto; }
+  aside { border-right:1px solid var(--line); background:var(--panel); padding:20px 16px; overflow-y:auto; }
+  .brand { font-weight:700; font-size:18px; color:var(--brand); margin-bottom:2px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:20px; }
+  h2 { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 10px; }
+  .device { border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; }
+  .device .name { font-weight:600; font-size:14px; }
+  .device .meta { color:var(--muted); font-size:12px; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; background:#16a34a; }
+  .dot.off { background:#9ca3af; }
+  main { display:flex; flex-direction:column; height:100vh; }
+  header { padding:16px 24px; border-bottom:1px solid var(--line); background:var(--panel); display:flex; justify-content:space-between; align-items:center; }
+  header button { background:none; border:1px solid var(--line); border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--muted); }
+  #messages { flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:12px; }
+  .msg { max-width:75%; padding:10px 14px; border-radius:14px; white-space:pre-wrap; word-wrap:break-word; }
+  .msg.user { align-self:flex-end; background:var(--user); color:#fff; border-bottom-right-radius:4px; }
+  .msg.bot { align-self:flex-start; background:var(--panel); border:1px solid var(--line); border-bottom-left-radius:4px; }
+  .msg.error { border-color:var(--warn); color:var(--warn); }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+  .chip { font:12px ui-monospace,Consolas,monospace; background:var(--brand-soft); color:var(--brand); border-radius:999px; padding:2px 8px; }
+  .chip.fail { background:var(--warn-soft); color:var(--warn); }
+  .badge { display:inline-block; font-size:11px; font-weight:600; background:var(--warn-soft); color:var(--warn); border-radius:6px; padding:1px 6px; margin-bottom:6px; }
+  .meta-line { color:var(--muted); font-size:11px; margin-top:6px; }
+  #typing { align-self:flex-start; color:var(--muted); font-size:13px; padding:4px 14px; }
+  #typing[hidden] { display:none; }
+  form { display:flex; gap:8px; padding:16px 24px; border-top:1px solid var(--line); background:var(--panel); }
+  #input { flex:1; border:1px solid var(--line); border-radius:10px; padding:10px 12px; font:inherit; }
+  #input:focus { outline:2px solid var(--brand-soft); border-color:var(--brand); }
+  #send { background:var(--brand); color:#fff; border:0; border-radius:10px; padding:0 18px; font:inherit; font-weight:600; cursor:pointer; }
+  #send:disabled { opacity:.5; cursor:default; }
+  @media (max-width:720px) { .app { grid-template-columns:1fr; } aside { display:none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand">Hawa Home</div>
+    <div class="sub">Support assistant (demo)</div>
+    <h2>Your devices</h2>
+    <div id="devices" data-testid="device-list"></div>
+  </aside>
+  <main>
+    <header>
+      <strong>Hawa Assist</strong>
+      <button id="reset" data-testid="reset-button" type="button">New chat</button>
+    </header>
+    <div id="messages" data-testid="message-list" aria-live="polite">
+      <div class="msg bot">Hi! I can answer questions about your Hawa fan, lock and purifier, control your fan, check warranty or raise a service ticket.</div>
+    </div>
+    <div id="typing" data-testid="typing-indicator" hidden>Hawa Assist is typing...</div>
+    <form id="form">
+      <input id="input" data-testid="chat-input" autocomplete="off" maxlength="2000"
+             placeholder="Ask about your fan, lock or purifier..." aria-label="Message">
+      <button id="send" data-testid="send-button" type="submit">Send</button>
+    </form>
+  </main>
+</div>
+<script>
+  const $ = (id) => document.getElementById(id);
+  let sessionId = "web-" + Math.random().toString(36).slice(2, 10);
+
+  function el(tag, cls, text) {
+    const node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function scrollDown() { $("messages").scrollTop = $("messages").scrollHeight; }
+
+  function addUser(text) {
+    const node = el("div", "msg user", text);
+    node.dataset.testid = "message-user";
+    $("messages").appendChild(node);
+    scrollDown();
+  }
+
+  function addBot(reply) {
+    const node = el("div", "msg bot");
+    node.dataset.testid = "message-bot";
+    if (reply.refused) {
+      const badge = el("span", "badge", "Refused" + (reply.blocked_by ? " · " + reply.blocked_by : ""));
+      badge.dataset.testid = "refusal-badge";
+      node.appendChild(badge);
+    }
+    if (reply.tool_calls && reply.tool_calls.length) {
+      const chips = el("div", "chips");
+      for (const tc of reply.tool_calls) {
+        const chip = el("span", "chip" + (tc.error ? " fail" : ""), "⚙ " + tc.name + (tc.error ? " ✕" : " ✓"));
+        chip.dataset.testid = "tool-chip";
+        chip.title = JSON.stringify(tc.args);
+        chips.appendChild(chip);
+      }
+      node.appendChild(chips);
+    }
+    node.appendChild(el("div", "", reply.text));
+    node.appendChild(el("div", "meta-line", reply.latency_ms + " ms · " + (reply.tokens_in + reply.tokens_out) + " tokens"));
+    $("messages").appendChild(node);
+    scrollDown();
+  }
+
+  function addError(text) {
+    const node = el("div", "msg bot error", text);
+    node.dataset.testid = "message-bot";
+    $("messages").appendChild(node);
+    scrollDown();
+  }
+
+  async function loadDevices() {
+    try {
+      const res = await fetch("/v1/devices");
+      const devices = await res.json();
+      const box = $("devices");
+      box.innerHTML = "";
+      for (const d of devices) {
+        const card = el("div", "device");
+        card.dataset.testid = "device-card";
+        const name = el("div", "name");
+        name.appendChild(el("span", "dot" + (d.online ? "" : " off")));
+        name.appendChild(document.createTextNode(d.name));
+        card.appendChild(name);
+        let detail = d.product + " · " + (d.online ? "online" : "offline");
+        if (d.type === "fan" && d.online) detail += " · speed " + d.speed;
+        if (d.battery_pct !== undefined) detail += " · battery " + d.battery_pct + "%";
+        if (d.filter_life_pct !== undefined) detail += " · filter " + d.filter_life_pct + "%";
+        card.appendChild(el("div", "meta", detail));
+        box.appendChild(card);
+      }
+    } catch (e) { /* sidebar is optional */ }
+  }
+
+  async function send(text) {
+    addUser(text);
+    $("send").disabled = true;
+    $("typing").hidden = false;
+    try {
+      const res = await fetch("/v1/chat", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, message: text }),
+      });
+      if (res.ok) {
+        const reply = await res.json();
+        addBot(reply);
+        if (reply.tool_calls && reply.tool_calls.length) loadDevices();
+      } else if (res.status === 503) {
+        addError("The assistant is unavailable right now. Please try again in a moment.");
+      } else {
+        addError("Sorry, something went wrong (" + res.status + ").");
+      }
+    } catch (e) {
+      addError("Network error. Please check your connection.");
+    } finally {
+      $("typing").hidden = true;
+      $("send").disabled = false;
+      $("input").focus();
+    }
+  }
+
+  $("form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const text = $("input").value.trim();
+    if (!text) return;
+    $("input").value = "";
+    send(text);
+  });
+
+  $("reset").addEventListener("click", async () => {
+    await fetch("/v1/sessions/" + encodeURIComponent(sessionId) + "/reset", { method: "POST" });
+    sessionId = "web-" + Math.random().toString(36).slice(2, 10);
+    $("messages").querySelectorAll("[data-testid^=message-]").forEach((n) => n.remove());
+    loadDevices();
+  });
+
+  loadDevices();
+</script>
+</body>
+</html>

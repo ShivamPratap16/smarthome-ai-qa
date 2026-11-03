@@ -1,0 +1,253 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Hawa Assist AI-quality monitoring (NOT deployed by this repo - ready for a real AWS account).
+  S3 data lake + Athena workgroup, a Lambda that turns QA reports into CloudWatch metrics,
+  an hourly schedule, and CloudWatch alarms on hallucination rate / overall quality.
+  Long-form intrinsics (Fn::Sub, Ref, Fn::GetAtt) are used so plain YAML parsers can read it.
+
+Parameters:
+  CodeBucket:
+    Type: String
+    Description: Bucket that holds the Lambda zip (upload quality-monitor.zip there first).
+  CodeKey:
+    Type: String
+    Default: lambda/quality-monitor.zip
+  PromptVersion:
+    Type: String
+    Default: v2
+    Description: PromptVersion dimension the alarms watch.
+  MaxHallucinationRate:
+    Type: Number
+    Default: 0.10
+  AlertEmail:
+    Type: String
+    Default: ""
+    Description: Optional e-mail for alarm notifications (leave empty for none).
+
+Conditions:
+  HasAlertEmail:
+    Fn::Not:
+      - Fn::Equals: [{Ref: AlertEmail}, ""]
+
+Resources:
+  LakeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration: {Status: Enabled}
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireAthenaResults
+            Status: Enabled
+            Prefix: athena-results/
+            ExpirationInDays: 7
+          - Id: ExpireOldChatlogs
+            Status: Enabled
+            Prefix: chatlogs/
+            ExpirationInDays: 90
+
+  LakeBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: {Ref: LakeBucket}
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:*"
+            Resource:
+              - Fn::GetAtt: [LakeBucket, Arn]
+              - Fn::Sub: "${LakeBucket.Arn}/*"
+            Condition:
+              Bool: {"aws:SecureTransport": "false"}
+
+  ChatlogsDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: {Ref: "AWS::AccountId"}
+      DatabaseInput:
+        Name: hawa_chatlogs
+        Description: Masked Hawa Assist chat logs (Parquet, partitioned by dt).
+
+  QaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: hawa-qa
+      State: ENABLED
+      WorkGroupConfiguration:
+        EnforceWorkGroupConfiguration: true
+        BytesScannedCutoffPerQuery: 1073741824   # 1 GB per query: a hard cost limit
+        ResultConfiguration:
+          OutputLocation:
+            Fn::Sub: "s3://${LakeBucket}/athena-results/"
+          EncryptionConfiguration: {EncryptionOption: SSE_S3}
+
+  MonitorLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/hawa-quality-monitor
+      RetentionInDays: 14
+
+  MonitorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Least privilege for the quality-monitor Lambda (same as infra/iam/quality-monitor-policy.json).
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: {Service: lambda.amazonaws.com}
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: quality-monitor
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: ReadOnlyTheQaReports
+                Effect: Allow
+                Action: [s3:GetObject]
+                Resource:
+                  Fn::Sub: "${LakeBucket.Arn}/reports/*"
+              - Sid: ListOnlyTheReportsPrefix
+                Effect: Allow
+                Action: [s3:ListBucket]
+                Resource:
+                  Fn::GetAtt: [LakeBucket, Arn]
+                Condition:
+                  StringLike: {"s3:prefix": ["reports/*"]}
+              - Sid: PublishMetricsOnlyToOurNamespace
+                Effect: Allow
+                Action: [cloudwatch:PutMetricData]
+                Resource: "*"
+                Condition:
+                  StringEquals: {"cloudwatch:namespace": "HawaAssist/Quality"}
+              - Sid: WriteOwnLogsOnly
+                Effect: Allow
+                Action: [logs:CreateLogStream, logs:PutLogEvents]
+                Resource:
+                  Fn::Sub: "${MonitorLogGroup.Arn}"
+
+  MonitorFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: MonitorLogGroup
+    Properties:
+      FunctionName: hawa-quality-monitor
+      Description: Publishes QA report metrics (PassRate, HallucinationRate, P95Latency, CostUSD) to CloudWatch.
+      Runtime: python3.13
+      Handler: handler.handler
+      Timeout: 30
+      MemorySize: 128
+      Role:
+        Fn::GetAtt: [MonitorRole, Arn]
+      Code:
+        S3Bucket: {Ref: CodeBucket}
+        S3Key: {Ref: CodeKey}
+      Environment:
+        Variables:
+          REPORTS_BUCKET: {Ref: LakeBucket}
+          REPORTS_PREFIX: reports
+          MAX_HALLUCINATION_RATE: {Ref: MaxHallucinationRate}
+
+  HourlySchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Run the quality monitor every hour.
+      ScheduleExpression: rate(1 hour)
+      State: ENABLED
+      Targets:
+        - Id: quality-monitor
+          Arn:
+            Fn::GetAtt: [MonitorFunction, Arn]
+
+  SchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: {Ref: MonitorFunction}
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt: [HourlySchedule, Arn]
+
+  AlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: Hawa Assist quality alerts
+
+  AlertSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasAlertEmail
+    Properties:
+      TopicArn: {Ref: AlertTopic}
+      Protocol: email
+      Endpoint: {Ref: AlertEmail}
+
+  HallucinationRateAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: hawa-assist-hallucination-rate
+      AlarmDescription: The assistant makes things up more often than allowed.
+      Namespace: HawaAssist/Quality
+      MetricName: HallucinationRate
+      Dimensions:
+        - Name: PromptVersion
+          Value: {Ref: PromptVersion}
+      Statistic: Maximum
+      Period: 3600
+      EvaluationPeriods: 1
+      Threshold: {Ref: MaxHallucinationRate}
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [{Ref: AlertTopic}]
+
+  QualityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: hawa-assist-quality-gate
+      AlarmDescription: Any quality rule broken (pass rate, red-team, latency, hallucination).
+      Namespace: HawaAssist/Quality
+      MetricName: QualityAlarm
+      Dimensions:
+        - Name: PromptVersion
+          Value: {Ref: PromptVersion}
+      Statistic: Maximum
+      Period: 3600
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: breaching   # no data = the monitor itself is broken
+      AlarmActions: [{Ref: AlertTopic}]
+
+  MonitorErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: hawa-quality-monitor-errors
+      AlarmDescription: The quality-monitor Lambda is failing.
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: {Ref: MonitorFunction}
+      Statistic: Sum
+      Period: 3600
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [{Ref: AlertTopic}]
+
+Outputs:
+  LakeBucketName:
+    Value: {Ref: LakeBucket}
+  AthenaWorkGroup:
+    Value: {Ref: QaWorkGroup}
+  MonitorFunctionName:
+    Value: {Ref: MonitorFunction}

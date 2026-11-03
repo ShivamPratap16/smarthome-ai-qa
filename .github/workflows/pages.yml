@@ -1,0 +1,65 @@
+# Publishes the quality dashboard to GitHub Pages on every push to main.
+# One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
+name: Dashboard (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  LLM_MODE: replay
+  PYTHONUTF8: "1"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browser
+        if: hashFiles('tests/web/**') != ''
+        run: python -m playwright install --with-deps chromium
+
+      # Fresh run on the merged code (replay mode). If a suite crashes, its
+      # committed latest.json (with its own date) stays and is shown as-is.
+      - name: Run QA suites
+        continue-on-error: true
+        run: python scripts/run_all.py
+
+      - name: Build dashboard
+        run: python scripts/build_dashboard.py
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

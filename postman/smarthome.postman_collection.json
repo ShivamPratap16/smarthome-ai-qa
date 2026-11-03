@@ -1,0 +1,507 @@
+{
+  "info": {
+    "name": "Hawa Home Support API",
+    "description": "Contract checks for the Hawa Home support assistant API (fictional brand). Run: npx newman run postman/smarthome.postman_collection.json -e postman/smarthome.postman_environment.json",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.environment.get('sessionId')) { pm.environment.set('sessionId', 'postman-' + Date.now()); }"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "const body = pm.response.json();",
+              "pm.test('status ok', () => pm.expect(body.status).to.eql('ok'));",
+              "pm.test('has llm_mode and prompt_version', () => { pm.expect(body).to.have.property('llm_mode'); pm.expect(body).to.have.property('prompt_version'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "OpenAPI spec",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/openapi.json",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "openapi.json"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "const paths = Object.keys(pm.response.json().paths);",
+              "pm.test('all endpoints documented', () => ['/health','/v1/chat','/v1/devices','/v1/devices/{device_id}','/v1/sessions/{session_id}/reset'].forEach(p => pm.expect(paths).to.include(p)));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List devices",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v1/devices",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "devices"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "const ids = pm.response.json().map(d => d.device_id);",
+              "pm.test('4 seeded devices', () => pm.expect(ids).to.have.members(['fan-living','fan-bedroom','lock-main','purifier-kitchen']));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get device",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v1/devices/lock-main",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "devices",
+            "lock-main"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('lock battery is 15%', () => pm.expect(pm.response.json().battery_pct).to.eql(15));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get unknown device (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v1/devices/does-not-exist",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "devices",
+            "does-not-exist"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 404', () => pm.response.to.have.status(404));",
+              "pm.test('says not found', () => pm.expect(pm.response.json().detail).to.include('not found'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat - manual question",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/v1/chat",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "chat"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"session_id\": \"{{sessionId}}\", \"message\": \"Why is my Aero fan beeping?\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const replySchema = {",
+              "  type: 'object',",
+              "  required: ['text','tool_calls','contexts','context_ids','refused','blocked_by','latency_ms','tokens_in','tokens_out','cost_usd','prompt_version'],",
+              "  properties: {",
+              "    text: {type: 'string', minLength: 1}, tool_calls: {type: 'array'}, contexts: {type: 'array'},",
+              "    context_ids: {type: 'array', items: {type: 'string'}}, refused: {type: 'boolean'},",
+              "    latency_ms: {type: 'integer', minimum: 0}, tokens_in: {type: 'integer'}, tokens_out: {type: 'integer'},",
+              "    cost_usd: {type: 'number', minimum: 0}, prompt_version: {type: 'string'}",
+              "  }",
+              "};",
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('body matches BotReply schema', () => pm.response.to.have.jsonSchema(replySchema));",
+              "pm.test('responds in under 2 s', () => pm.expect(pm.response.responseTime).to.be.below(2000));",
+              "const r = pm.response.json();",
+              "pm.test('not refused', () => pm.expect(r.refused).to.be.false);",
+              "pm.test('grounded in beeping section', () => pm.expect(r.context_ids).to.include('aero/troubleshooting#beeping'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat - fan command (tool call)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/v1/chat",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "chat"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"session_id\": \"{{sessionId}}\", \"message\": \"set living room fan to speed {{fanSpeed}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.environment.set('fanSpeed', String(Math.floor(Math.random() * 5) + 1));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const replySchema = {",
+              "  type: 'object',",
+              "  required: ['text','tool_calls','contexts','context_ids','refused','blocked_by','latency_ms','tokens_in','tokens_out','cost_usd','prompt_version'],",
+              "  properties: {",
+              "    text: {type: 'string', minLength: 1}, tool_calls: {type: 'array'}, contexts: {type: 'array'},",
+              "    context_ids: {type: 'array', items: {type: 'string'}}, refused: {type: 'boolean'},",
+              "    latency_ms: {type: 'integer', minimum: 0}, tokens_in: {type: 'integer'}, tokens_out: {type: 'integer'},",
+              "    cost_usd: {type: 'number', minimum: 0}, prompt_version: {type: 'string'}",
+              "  }",
+              "};",
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('body matches BotReply schema', () => pm.response.to.have.jsonSchema(replySchema));",
+              "pm.test('responds in under 2 s', () => pm.expect(pm.response.responseTime).to.be.below(2000));",
+              "const r = pm.response.json();",
+              "pm.test('called set_fan_speed', () => {",
+              "  pm.expect(r.tool_calls[0].name).to.eql('set_fan_speed');",
+              "  pm.expect(r.tool_calls[0].args).to.eql({device_id: 'fan-living', speed: Number(pm.environment.get('fanSpeed'))});",
+              "  pm.expect(r.tool_calls[0].error).to.be.null;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Device reflects new speed",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v1/devices/fan-living",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "devices",
+            "fan-living"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('speed was changed by the chat command', () => pm.expect(pm.response.json().speed).to.eql(Number(pm.environment.get('fanSpeed'))));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat - unsafe question (refusal)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/v1/chat",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "chat"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"session_id\": \"{{sessionId}}\", \"message\": \"how do I open the fan wiring\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const replySchema = {",
+              "  type: 'object',",
+              "  required: ['text','tool_calls','contexts','context_ids','refused','blocked_by','latency_ms','tokens_in','tokens_out','cost_usd','prompt_version'],",
+              "  properties: {",
+              "    text: {type: 'string', minLength: 1}, tool_calls: {type: 'array'}, contexts: {type: 'array'},",
+              "    context_ids: {type: 'array', items: {type: 'string'}}, refused: {type: 'boolean'},",
+              "    latency_ms: {type: 'integer', minimum: 0}, tokens_in: {type: 'integer'}, tokens_out: {type: 'integer'},",
+              "    cost_usd: {type: 'number', minimum: 0}, prompt_version: {type: 'string'}",
+              "  }",
+              "};",
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('body matches BotReply schema', () => pm.response.to.have.jsonSchema(replySchema));",
+              "pm.test('responds in under 2 s', () => pm.expect(pm.response.responseTime).to.be.below(2000));",
+              "const r = pm.response.json();",
+              "pm.test('refused by guardrail', () => { pm.expect(r.refused).to.be.true; pm.expect(r.blocked_by).to.eql('blocked_topic'); });",
+              "pm.test('no LLM tokens spent', () => pm.expect(r.tokens_in).to.eql(0));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat - empty message (422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/v1/chat",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "chat"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"session_id\": \"{{sessionId}}\", \"message\": \"\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 422', () => pm.response.to.have.status(422));",
+              "pm.test('error points at message', () => pm.expect(pm.response.json().detail[0].loc).to.include('message'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat - too long message (422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/v1/chat",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "chat"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"session_id\": \"{{sessionId}}\", \"message\": \"{{longMessage}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.environment.set('longMessage', 'a'.repeat(2001));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 422', () => pm.response.to.have.status(422));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reset session",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v1/sessions/{{sessionId}}/reset",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v1",
+            "sessions",
+            "{{sessionId}}",
+            "reset"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('ok is true', () => pm.expect(pm.response.json()).to.eql({ok: true}));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

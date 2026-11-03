@@ -1,0 +1,59 @@
+# Manual run of the evals against the REAL Gemini API (uses quota!).
+# Trigger it from the Actions tab -> "Live eval" -> Run workflow.
+# Needs repo secret GEMINI_API_KEY (Settings -> Secrets and variables -> Actions).
+name: Live eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      extra_args:
+        description: "Extra arguments for qa.evals.run (optional)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  LLM_MODE: live
+  PYTHONUTF8: "1"
+
+jobs:
+  live-eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check secret is set
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::error::Secret GEMINI_API_KEY is not set"; exit 1
+          fi
+
+      - name: Run evals (live LLM)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          EXTRA_ARGS: ${{ github.event.inputs.extra_args }}
+        run: python -m qa.evals.run --mode live $EXTRA_ARGS
+
+      - name: Quality gate (evals only)
+        if: always()
+        run: python -m qa.gate --require evals
+
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-eval-report
+          path: reports/evals/

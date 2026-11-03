@@ -1,0 +1,68 @@
+# CI: runs on every push and pull request. Needs NO secrets:
+# the LLM is replayed from recorded cassettes (LLM_MODE=replay).
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  LLM_MODE: replay
+  PYTHONUTF8: "1"
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browser
+        if: hashFiles('tests/web/**') != ''
+        run: python -m playwright install --with-deps chromium
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      # Unit + integration tests. The suite folders below are run (and reported)
+      # by scripts/run_all.py in the next step, so they are not run twice.
+      - name: Tests
+        run: pytest tests -q --ignore=tests/conversation --ignore=tests/api --ignore=tests/web
+
+      - name: Run QA suites (write reports/*/latest.json)
+        id: suites
+        run: python scripts/run_all.py
+
+      - name: Quality gate
+        if: always()
+        run: python -m qa.gate --json reports/gate.json
+
+      - name: Build dashboard preview
+        if: always()
+        run: python scripts/build_dashboard.py
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-reports
+          path: |
+            reports/
+            site/
+          if-no-files-found: warn

@@ -1,0 +1,36 @@
+# promptfoo: compare prompt v1 (naive) vs v2 (grounded) of Hawa Assist on the golden dataset.
+#
+#   python -m qa.promptfoo.build_tests          # (re)generate tests.yaml from golden.jsonl
+#   cd qa/promptfoo
+#   PROMPTFOO_PYTHON=../../.venv/Scripts/python.exe LLM_MODE=fake npx promptfoo@latest eval --no-cache
+#   npx promptfoo@latest view                    # opens the side-by-side web viewer
+#
+# LLM_MODE=fake (offline), replay (cassettes, free), record/live (spends Gemini quota).
+# The bot AND the llm-rubric grader go through our own LLM client (provider.py), so both are
+# cached by the same cassettes as qa/evals/run.py.
+description: "Hawa Assist - prompt v1 vs v2 on the golden dataset"
+
+prompts:
+  - "{{question}}"          # provider.py actually plays every turn from vars.turns_json
+
+providers:
+  - id: file://provider.py
+    label: prompt-v1
+    config:
+      prompt_version: v1
+  - id: file://provider.py
+    label: prompt-v2
+    config:
+      prompt_version: v2
+
+defaultTest:
+  options:
+    provider:
+      id: file://provider.py:call_grader   # llm-rubric grader = our cached Gemini client
+
+tests: file://tests.yaml
+
+evaluateOptions:
+  maxConcurrency: 1          # free Gemini tier: one request at a time
+
+outputPath: results.json       # local only (gitignore it); `promptfoo view` shows the full history

@@ -1,0 +1,126 @@
+{
+  "suite": "web",
+  "run_id": "web-20261103-122046",
+  "started_at": "2026-11-03T12:20:46+00:00",
+  "git_sha": "nogit",
+  "prompt_version": "v2",
+  "model": "gemini-3.5-flash-lite",
+  "llm_mode": "fake",
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0,
+    "pass_rate": 1.0,
+    "metrics": {
+      "known_bugs": 0,
+      "duration_s": 7.1
+    }
+  },
+  "cases": [
+    {
+      "id": "tests/web/test_chat_ui.py::test_send_and_receive[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 153
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_tool_chip_appears_for_fan_command[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 161
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_failed_tool_call_shows_failed_chip[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 106
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_refusal_badge_for_unsafe_question[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 110
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_device_sidebar_updates_after_command[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 107
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_typing_indicator_and_disabled_send_while_waiting[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 96
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_llm_unavailable_shows_friendly_error[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 83
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_reset_clears_chat_and_starts_new_session[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 344
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_empty_and_whitespace_messages_are_not_sent[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 410
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_long_message_is_capped_at_2000_chars[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 106
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_html_in_message_is_shown_as_text_not_executed[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 109
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_accessibility_basics[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 24
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_keyboard_only_send_with_enter[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 152
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_tab_order_reaches_input_then_send[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 12
+    },
+    {
+      "id": "tests/web/test_chat_ui.py::test_mobile_viewport[chromium]",
+      "category": "chat_ui",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 215
+    }
+  ]
+}

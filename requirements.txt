@@ -1,0 +1,21 @@
+fastapi
+uvicorn[standard]
+httpx
+pydantic
+python-dotenv
+rank_bm25
+pytest
+pytest-asyncio
+deepeval
+ragas
+playwright
+pytest-playwright
+schemathesis
+locust
+duckdb
+boto3
+moto[s3,athena,logs,lambda]
+ruff
+pyyaml
+langchain-community<0.4  # ragas 0.4.x imports chat_models.vertexai, removed in 0.4
+cfn-lint
