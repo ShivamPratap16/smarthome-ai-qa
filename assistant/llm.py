@@ -22,9 +22,10 @@ import json
 import os
 import re
 import time
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Callable, Protocol, Union
+from typing import Protocol
 
 import httpx
 from dotenv import load_dotenv
@@ -262,8 +263,8 @@ class CassetteLLM:
 
 
 # --------------------------------------------------------------------------- fake
-ScriptItem = Union[LLMResponse, str, Exception]
-Responder = Callable[[str, list[dict], Union[list[dict], None]], LLMResponse]
+ScriptItem = LLMResponse | str | Exception
+Responder = Callable[[str, list[dict], list[dict] | None], LLMResponse]
 
 
 def _estimate_tokens(text: str) -> int:
@@ -289,7 +290,7 @@ def default_fake_responder(system: str, messages: list[dict], tools: list[dict] 
         return LLMResponse(text="", tool_calls=[ToolCall("set_fan_speed",
                                                          {"device_id": device, "speed": int(speed.group(1))})],
                            tokens_in=tokens_in, tokens_out=10)
-    match = re.search(r"\[([a-z]+/[a-z0-9#-]+)\][^\n]*\n(.+?)(?:\n\n|\Z)", system, re.S)
+    match = re.search(r"\[([a-z]+/[a-z0-9#-]+)\][^\n]*\n(.+?)(?:\n\n|\Z)", system, re.DOTALL)
     if match:
         answer = f"According to the manual: {match.group(2).strip()[:400]}"
     else:

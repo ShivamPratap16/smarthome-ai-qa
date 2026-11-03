@@ -108,6 +108,20 @@ bot = SupportAssistant(
 reply = bot.chat("s1", "set living room fan to speed 3")
 ```
 
+## Safety hardening (after the red-team round)
+- **Indirect injection:** device names, tool results and manual chunks are untrusted data.
+  `guardrails.looks_like_injection` / `sanitize_data` replace planted instructions; poisoned manual
+  chunks are dropped; v2 wraps data in `<devices>` / `<manual>` tags and says it is data only.
+- **Ticket rule in code:** `create_service_ticket` only for the user's own devices, and only with a
+  phone number the user typed in this session (403 otherwise).
+- **Masking:** phones (+91, 0 prefix, any grouping like 9876 543 210), emails, Aadhaar, cards, OTPs
+  and passwords are masked in replies, tool args/results and every log row (also for refused messages).
+- **Limits:** max 4 tool rounds and max 6 tool calls per message; every tool call always gets a
+  tool result in the history (extra or skipped ones get an error).
+- **Tickets:** numbering continues from the chat-log DB; ticket rows are never overwritten.
+- **Dates:** `DeviceCloud(today=...)` or env `FIXED_TODAY=2026-11-01` pins warranty answers.
+- **API:** blank messages get 422; OpenAPI documents the BotReply schema, 503 and 404.
+
 ## Interview talking points
 - **Why RAG?** The model only knows facts we put in the prompt, so answers stay grounded in the
   manual and we can measure faithfulness / hallucination against the retrieved chunks.

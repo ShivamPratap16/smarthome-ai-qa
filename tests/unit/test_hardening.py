@@ -6,7 +6,13 @@ import pytest
 
 from assistant.bot import MAX_TOOL_CALLS_PER_TURN
 from assistant.devices import DeviceCloud
-from assistant.guardrails import REMOVED_DATA, check_input, looks_like_injection, mask_pii, sanitize_data
+from assistant.guardrails import (
+    REMOVED_DATA,
+    check_input,
+    looks_like_injection,
+    mask_pii,
+    sanitize_data,
+)
 from assistant.llm import LLMResponse, ToolCall
 from assistant.retrieval import all_chunks
 from assistant.store import ChatStore

@@ -17,8 +17,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from assistant.devices import TOOLS, DeviceAPIError, DeviceCloud
-from assistant.guardrails import (REFUSAL_MESSAGES, check_input, looks_like_injection, mask_obj,
-                                  mask_pii, sanitize_data)
+from assistant.guardrails import (
+    REFUSAL_MESSAGES,
+    check_input,
+    looks_like_injection,
+    mask_obj,
+    mask_pii,
+    sanitize_data,
+)
 from assistant.llm import LLMClient, LLMResponse, cost_usd, get_llm
 from assistant.retrieval import Chunk, retrieve
 from assistant.store import ChatStore

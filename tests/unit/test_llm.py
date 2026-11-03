@@ -2,8 +2,18 @@
 
 import pytest
 
-from assistant.llm import (CassetteLLM, CassetteMiss, FakeLLM, GeminiClient, LLMError, LLMResponse,
-                           ToolCall, get_llm, parse_gemini_response, to_gemini_contents)
+from assistant.llm import (
+    CassetteLLM,
+    CassetteMiss,
+    FakeLLM,
+    GeminiClient,
+    LLMError,
+    LLMResponse,
+    ToolCall,
+    get_llm,
+    parse_gemini_response,
+    to_gemini_contents,
+)
 
 TOOLS = [{"name": "set_fan_speed", "description": "x",
           "parameters": {"type": "object", "properties": {"speed": {"type": "integer"}}}}]
