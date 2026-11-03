@@ -22,7 +22,7 @@ import json
 import re
 import sqlite3
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from qa.evals.checks import abstained, is_hinglish
@@ -135,7 +135,7 @@ def make_case(convo: dict, reason: str, existing_ids: set[str], db_label: str,
         "source": {"type": "chatlog", "db": db_label, "conversation_id": convo["id"],
                    "failure": reason, "bot_reply": (bot[-1]["content"] if bot else "")[:300],
                    "prompt_version": bot[-1]["prompt_version"] if bot else None,
-                   "added_at": datetime.now(timezone.utc).isoformat(timespec="seconds")},
+                   "added_at": datetime.now(UTC).isoformat(timespec="seconds")},
     }
 
 

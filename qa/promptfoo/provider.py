@@ -27,10 +27,10 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from assistant.bot import SupportAssistant  # noqa: E402
-from assistant.devices import DeviceCloud  # noqa: E402
-from assistant.llm import LLMError, get_llm  # noqa: E402
-from assistant.store import ChatStore  # noqa: E402
+from assistant.bot import SupportAssistant
+from assistant.devices import DeviceCloud
+from assistant.llm import LLMError, get_llm
+from assistant.store import ChatStore
 
 EVAL_TODAY = date(2026, 11, 1)   # same fixed date as qa/evals/run.py => same cassettes
 _LLM_CACHE: dict[str, object] = {}
@@ -95,5 +95,5 @@ def call_grader(prompt: str, options: dict, context: dict) -> dict:
                                     [{"role": "user", "content": prompt}], None, 0.0)
     except LLMError as exc:
         return {"error": f"grader LLM error {exc.status}"}
-    match = re.search(r"\{.*\}", reply.text, re.S)
+    match = re.search(r"\{.*\}", reply.text, re.DOTALL)
     return {"output": match.group(0) if match else reply.text}

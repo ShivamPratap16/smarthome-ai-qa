@@ -1,0 +1,19 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an evaluator. Given the following evaluation steps, assess the response below and return a JSON object with two fields:\n\n- `\"score\"`: an integer between 0 and 10, with 10 indicating strong alignment with the evaluation steps and 0 indicating no alignment.\n- `\"reason\"`: a brief explanation for why the score was given. This must mention specific strengths or shortcomings, referencing relevant details from the input. Do **not** quote the score itself in the explanation.\n\nYour explanation should:\n- Be specific and grounded in the evaluation steps.\n- Mention key details from the test case parameters.\n- Be concise, clear, and focused on the evaluation logic.\n\n\nOnly return valid JSON. Do **not** include any extra commentary or text.\n\n---\n\nEvaluation Steps:\n1. Check whether the facts (numbers, steps, yes/no) in 'actual output' agree with 'expected output'.\n2. Penalise contradictions and invented facts heavily; extra correct details and a Hinglish reply are fine.\n\n\nTest Case:\nInput:\ncustomer: Turn the bedroom fan to speed 4 please \n\nActual Output:\nThe bedroom fan is offline right now, so I couldn't change the speed. Please check if the wall switch is on, and let me know if you'd like to raise a service ticket! \n\nExpected Output:\nI couldn't change the speed because the bedroom fan is offline. Check that the wall switch is on and the router is on 2.4 GHz Wi-Fi; meanwhile you can use the IR remote. \n\n\n\nParameters:\nInput, Actual Output, and Expected Output\n\n\n---\n**Example JSON:**\n{\n  \"reason\": \"your concise and informative reason here\",\n  \"score\": 0\n}\n\nJSON:"
+      }
+    ],
+    "tools": null
+  },
+  "response": {
+    "text": "{\n  \"reason\": \"The actual output successfully conveys the core fact that the bedroom fan is offline and cannot change speed. However, it contradicts the expected troubleshooting steps by omitting the mention of the 2.4 GHz Wi-Fi router check and the IR remote workaround, replacing them instead with an offer to raise a service ticket. Due to these missing details and differing troubleshooting steps, a moderate score is assigned.\",\n  \"score\": 6\n}",
+    "tool_calls": [],
+    "tokens_in": 377,
+    "tokens_out": 93
+  }
+}

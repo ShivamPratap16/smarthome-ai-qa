@@ -1,0 +1,95 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[aero/speed-settings#boost-and-sleep-modes] Speed Settings: Boost and Sleep Modes\nBoost mode runs the fan at 380 RPM, above speed 5, for a fixed 2 hours. After 2 hours the fan\ngoes back to the speed it was on before Boost. Press the \"B\" button on the remote to start or\nstop Boost. Sleep mode (the moon button) lowers the speed by one step every 60 minutes until it\nreaches speed 1, and the fan LED dims to 10% brightness. Sleep mode does not switch the fan off;\nuse the timer (1, 2, 4 or 8 hours) if you want the fan to stop on its own.\n\n[aero/troubleshooting#led-indicator-codes] Troubleshooting: LED Indicator Codes\nThe status LED on the bottom of the fan shows:\n- Solid blue: connected to Wi-Fi and the Hawa cloud.\n- Fast blinking blue (2 times per second): Wi-Fi pairing mode is active (lasts 3 minutes).\n- Slow blinking blue (once every 2 seconds): connected to Wi-Fi but cannot reach the Hawa cloud.\n- Solid amber: not connected to Wi-Fi; the fan still works with the remote.\n- Red blinking twice, then pause: motor overheat. The fan stops for 15 minutes to cool down and\n  then restarts on speed 1.\n- No light: no power, or the LED was switched off in the app (Settings > Night Light).\n\n[aero/reset#factory-reset-and-wi-fi-reset] Reset: Factory Reset and Wi-Fi Reset\nWi-Fi reset (keeps your speed settings): press and hold the \"Timer\" button on the remote for\n5 seconds. The LED starts fast blinking blue and the fan is ready to pair again.\nFactory reset (erases everything, including Wi-Fi, timers and schedules): press and hold the\n\"Timer\" and \"B\" (Boost) buttons together for 8 seconds. The fan beeps 4 times and the LED\nblinks blue. Alternative without remote: switch the wall switch OFF and ON 5 times, keeping\nit ON for about 2 seconds each time; the fan beeps 4 times when the reset is done.\nAfter a factory reset, remove the fan from the Hawa Home app and add it again.\n\n[aero/troubleshooting#beeping] Troubleshooting: Beeping\nThe Aero uses beeps to tell you what is happening:\n- 1 short beep: command received.\n- 2 short beeps: you pressed a speed button but the fan is already at that speed, or at the\n  speed limit.\n- 3 long beeps repeated every 10 seconds: input voltage is outside the safe range of\n  140 V to 285 V. The fan stops to protect the motor and restarts by itself when voltage is normal.\n- Continuous beeping: the motor is blocked or jammed (for example a blade is touching something).\n  Switch the fan off at the wall switch, wait until the blades stop and check for obstruction.\n  If it continues, raise a service ticket. Do not open the canopy or motor housing yourself.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How fast does Boost mode run on the Aero, and for how long?"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "Boost mode runs the fan at 380 RPM (which is above speed 5) for a fixed duration of 2 hours. After the 2 hours are up, the fan automatically returns to whatever speed it was set to before Boost was turned on.",
+    "tool_calls": [],
+    "tokens_in": 1200,
+    "tokens_out": 53
+  }
+}

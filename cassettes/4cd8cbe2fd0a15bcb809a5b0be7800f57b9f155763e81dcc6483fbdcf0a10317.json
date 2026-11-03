@@ -1,0 +1,95 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[general/app#pairing-over-wi-fi-and-bluetooth] App: Pairing Over Wi-Fi and Bluetooth\nDownload the Hawa Home app (Android 9+ or iOS 15+) and sign in with your mobile number.\n- Hawa Aero and Hawa Pure RO connect over Wi-Fi. Only 2.4 GHz Wi-Fi is supported, not 5 GHz.\n  Put the device in pairing mode, tap \"Add device\" in the app and follow the steps.\n- Hawa Lock S1 connects over Bluetooth Low Energy (BLE) from up to 10 metres. For remote\n  control from outside the home, add the Hawa Bridge, which connects the lock to Wi-Fi.\nA device can belong to only one home at a time. Up to 10 family members can share a home.\n\n[aero/troubleshooting#fan-offline-in-app] Troubleshooting: Fan Offline in App\nIf the app shows the fan as \"Offline\":\n1. Check the wall switch is on and the fan works with the remote.\n2. Make sure your router is on 2.4 GHz. The Aero cannot connect to 5 GHz-only networks.\n3. Check the LED colour (see LED indicator codes).\n4. If you changed your Wi-Fi name or password, re-pair the fan from the app.\n5. Move the router closer; the fan needs a signal of at least -70 dBm.\nA fan that is offline can still be controlled with the IR remote, but not from the app or\nthe assistant.\n\n[aero/overview#specifications] Overview: Specifications\nThe Hawa Aero is a 1200 mm (48 inch) BLDC smart ceiling fan with 3 blades. It draws 32 W at\nspeed 5 and only 1.5 W in standby. It works on 140 V to 285 V AC, 50 Hz. Air delivery at\nspeed 5 is 230 CMM (cubic metres per minute). The fan has 5 speeds plus Boost and Sleep modes,\nan IR remote control (model HR-10, needs 2 x AAA batteries) and built-in Wi-Fi (2.4 GHz only)\nfor control from the Hawa Home app. Warranty details are in the general warranty policy.\n\n[aero/reset#factory-reset-and-wi-fi-reset] Reset: Factory Reset and Wi-Fi Reset\nWi-Fi reset (keeps your speed settings): press and hold the \"Timer\" button on the remote for\n5 seconds. The LED starts fast blinking blue and the fan is ready to pair again.\nFactory reset (erases everything, including Wi-Fi, timers and schedules): press and hold the\n\"Timer\" and \"B\" (Boost) buttons together for 8 seconds. The fan beeps 4 times and the LED\nblinks blue. Alternative without remote: switch the wall switch OFF and ON 5 times, keeping\nit ON for about 2 seconds each time; the fan beeps 4 times when the reset is done.\nAfter a factory reset, remove the fan from the Hawa Home app and add it again.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Can the Aero fan connect to my 5 GHz Wi-Fi network?"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "No, the Hawa Aero fan only supports **2.4 GHz** Wi-Fi networks and cannot connect to 5 GHz-only networks. When setting up or pairing your fan, make sure your router is broadcasting on 2.4 GHz.",
+    "tool_calls": [],
+    "tokens_in": 1195,
+    "tokens_out": 51
+  }
+}

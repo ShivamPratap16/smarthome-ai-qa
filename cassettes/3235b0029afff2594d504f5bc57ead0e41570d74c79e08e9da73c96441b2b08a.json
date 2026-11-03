@@ -1,0 +1,95 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[aero/speed-settings#boost-and-sleep-modes] Speed Settings: Boost and Sleep Modes\nBoost mode runs the fan at 380 RPM, above speed 5, for a fixed 2 hours. After 2 hours the fan\ngoes back to the speed it was on before Boost. Press the \"B\" button on the remote to start or\nstop Boost. Sleep mode (the moon button) lowers the speed by one step every 60 minutes until it\nreaches speed 1, and the fan LED dims to 10% brightness. Sleep mode does not switch the fan off;\nuse the timer (1, 2, 4 or 8 hours) if you want the fan to stop on its own.\n\n[aero/troubleshooting#led-indicator-codes] Troubleshooting: LED Indicator Codes\nThe status LED on the bottom of the fan shows:\n- Solid blue: connected to Wi-Fi and the Hawa cloud.\n- Fast blinking blue (2 times per second): Wi-Fi pairing mode is active (lasts 3 minutes).\n- Slow blinking blue (once every 2 seconds): connected to Wi-Fi but cannot reach the Hawa cloud.\n- Solid amber: not connected to Wi-Fi; the fan still works with the remote.\n- Red blinking twice, then pause: motor overheat. The fan stops for 15 minutes to cool down and\n  then restarts on speed 1.\n- No light: no power, or the LED was switched off in the app (Settings > Night Light).\n\n[pure/care#cleaning-the-storage-tank] Care: Cleaning the Storage Tank\nClean the 8 litre storage tank every 3 months. Switch off the purifier, drain all water using\nthe dispense button, wipe the inside of the tank with a clean soft cloth and food-grade\ncleaning solution, rinse twice with purified water and switch on again. If the purifier is not\nused for more than 7 days (for example during travel), drain the tank and discard the first\nfull tank after you return.\n\n[aero/speed-settings#speeds-1-to-5] Speed Settings: Speeds 1 to 5\nThe Aero has 5 fixed speeds. Approximate motor speeds are:\n- Speed 1: 110 RPM (about 6 W) — quiet, good for night\n- Speed 2: 170 RPM (about 10 W)\n- Speed 3: 230 RPM (about 16 W)\n- Speed 4: 290 RPM (about 24 W)\n- Speed 5: 350 RPM (about 32 W)\nYou can change the fan speed with the remote (buttons 1 to 5), with the Hawa Home app, or by\nasking the Hawa assistant. The fan remembers the last speed after a power cut.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Will Sleep mode switch off my Aero fan during the night?"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "No, Sleep mode will not switch off your Aero fan. \n\nAccording to the manual, Sleep mode (activated by the moon button on the remote) lowers the fan speed by one step every 60 minutes until it reaches speed 1, and the fan LED dims to 10% brightness, but **it does not switch the fan off**. \n\nIf you want the fan to stop on its own during the night, you should use the timer function instead (which can be set for 1, 2, 4, or 8 hours).",
+    "tool_calls": [],
+    "tokens_in": 1121,
+    "tokens_out": 115
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an evaluator. Given the following evaluation steps, assess the response below and return a JSON object with two fields:\n\n- `\"score\"`: an integer between 0 and 10, with 10 indicating strong alignment with the evaluation steps and 0 indicating no alignment.\n- `\"reason\"`: a brief explanation for why the score was given. This must mention specific strengths or shortcomings, referencing relevant details from the input. Do **not** quote the score itself in the explanation.\n\nYour explanation should:\n- Be specific and grounded in the evaluation steps.\n- Mention key details from the test case parameters.\n- Be concise, clear, and focused on the evaluation logic.\n\n\nOnly return valid JSON. Do **not** include any extra commentary or text.\n\n---\n\nEvaluation Steps:\n1. Check whether the facts (numbers, steps, yes/no) in 'actual output' agree with 'expected output'.\n2. Penalise contradictions and invented facts heavily; extra correct details and a Hinglish reply are fine.\n\n\nTest Case:\nInput:\ncustomer: Set the living room fan to speed 3\nbot: Your living room fan has been set to speed 3.\ncustomer: Make it one step faster \n\nActual Output:\nI've set your living room fan to speed 4. \n\nExpected Output:\nDone, the living room fan is now on speed 4. \n\n\n\nParameters:\nInput, Actual Output, and Expected Output\n\n\n---\n**Example JSON:**\n{\n  \"reason\": \"your concise and informative reason here\",\n  \"score\": 0\n}\n\nJSON:"
+      }
+    ],
+    "tools": null
+  },
+  "response": {
+    "text": "{\n  \"reason\": \"The actual output correctly follows the context of the user's request (\\\"Make it one step faster\\\" from speed 3) to arrive at speed 4, which matches the expected output's factual outcome. Although the phrasing differs slightly from the expected output, the core fact (speed 4) is accurate and there are no contradictions or invented facts.\",\n  \"score\": 10\n}",
+    "tool_calls": [],
+    "tokens_in": 342,
+    "tokens_out": 88
+  }
+}

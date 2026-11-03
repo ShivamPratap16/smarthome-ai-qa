@@ -30,7 +30,14 @@ from pathlib import Path
 
 from assistant.bot import BotReply, SupportAssistant
 from assistant.devices import DeviceCloud
-from assistant.llm import DEFAULT_MODEL, CassetteMiss, LLMClient, LLMError, LLMResponse, get_llm
+from assistant.llm import (
+    DEFAULT_MODEL,
+    CassetteMiss,
+    LLMClient,
+    LLMError,
+    LLMResponse,
+    get_llm,
+)
 from assistant.store import ChatStore
 from qa.evals import checks
 from qa.evals.judge import RubricJudge, fake_judge_llm, make_deepeval_model
@@ -244,7 +251,7 @@ def run_deepeval(case: dict, convo: Conversation, model) -> dict:
     from deepeval.metrics import FaithfulnessMetric, GEval
     from deepeval.test_case import LLMTestCase
     try:
-        from deepeval.test_case import SingleTurnParams as Params   # deepeval >= 4
+        from deepeval.test_case import SingleTurnParams as Params  # deepeval >= 4
     except ImportError:
         from deepeval.test_case import LLMTestCaseParams as Params
 

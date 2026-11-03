@@ -1,26 +1,26 @@
 {
   "suite": "load",
-  "run_id": "load-20261103-122147",
-  "started_at": "2026-11-03T12:21:47+00:00",
-  "git_sha": "nogit",
+  "run_id": "load-20261103-163319",
+  "started_at": "2026-11-03T16:33:19+00:00",
+  "git_sha": "16ec8df",
   "prompt_version": "v2",
   "model": "",
   "llm_mode": "fake",
   "users": 20,
   "duration": "30s",
-  "host": "http://127.0.0.1:53265",
+  "host": "http://127.0.0.1:51020",
   "summary": {
     "total": 6,
     "passed": 6,
     "failed": 0,
     "pass_rate": 1.0,
     "metrics": {
-      "p50_latency_ms": 9.0,
-      "p95_latency_ms": 92.0,
-      "p99_latency_ms": 100.0,
-      "avg_latency_ms": 21.3,
-      "rps": 15.26,
-      "requests": 445,
+      "p50_latency_ms": 8.0,
+      "p95_latency_ms": 17.0,
+      "p99_latency_ms": 48.0,
+      "avg_latency_ms": 8.4,
+      "rps": 15.19,
+      "requests": 442,
       "error_rate": 0.0
     }
   },
@@ -29,13 +29,13 @@
       "id": "GET /health",
       "category": "GET",
       "passed": true,
-      "reason": "35 reqs, 0 failed, p95 10 ms",
+      "reason": "48 reqs, 0 failed, p95 7 ms",
       "latency_ms": 2.0,
       "scores": {
         "p50_ms": 2.0,
-        "p95_ms": 10.0,
-        "p99_ms": 10.0,
-        "rps": 1.2,
+        "p95_ms": 7.0,
+        "p99_ms": 8.0,
+        "rps": 1.65,
         "error_rate": 0.0
       }
     },
@@ -43,13 +43,13 @@
       "id": "GET /v1/devices",
       "category": "GET",
       "passed": true,
-      "reason": "112 reqs, 0 failed, p95 4 ms",
+      "reason": "105 reqs, 0 failed, p95 4 ms",
       "latency_ms": 2.0,
       "scores": {
         "p50_ms": 2.0,
         "p95_ms": 4.0,
-        "p99_ms": 9.0,
-        "rps": 3.84,
+        "p99_ms": 8.0,
+        "rps": 3.61,
         "error_rate": 0.0
       }
     },
@@ -57,13 +57,13 @@
       "id": "GET /v1/devices/{id}",
       "category": "GET",
       "passed": true,
-      "reason": "29 reqs, 0 failed, p95 4 ms",
+      "reason": "37 reqs, 0 failed, p95 7 ms",
       "latency_ms": 2.0,
       "scores": {
         "p50_ms": 2.0,
-        "p95_ms": 4.0,
-        "p99_ms": 4.0,
-        "rps": 0.99,
+        "p95_ms": 7.0,
+        "p99_ms": 8.0,
+        "rps": 1.27,
         "error_rate": 0.0
       }
     },
@@ -71,13 +71,13 @@
       "id": "POST /v1/chat [manual]",
       "category": "POST",
       "passed": true,
-      "reason": "183 reqs, 0 failed, p95 98 ms",
-      "latency_ms": 19.0,
+      "reason": "159 reqs, 0 failed, p95 19 ms",
+      "latency_ms": 10.0,
       "scores": {
-        "p50_ms": 19.0,
-        "p95_ms": 98.0,
-        "p99_ms": 100.0,
-        "rps": 6.28,
+        "p50_ms": 10.0,
+        "p95_ms": 19.0,
+        "p99_ms": 48.0,
+        "rps": 5.46,
         "error_rate": 0.0
       }
     },
@@ -85,13 +85,13 @@
       "id": "POST /v1/chat [refusal]",
       "category": "POST",
       "passed": true,
-      "reason": "23 reqs, 0 failed, p95 86 ms",
-      "latency_ms": 9.0,
+      "reason": "26 reqs, 0 failed, p95 21 ms",
+      "latency_ms": 10.0,
       "scores": {
-        "p50_ms": 9.0,
-        "p95_ms": 86.0,
-        "p99_ms": 96.0,
-        "rps": 0.79,
+        "p50_ms": 10.0,
+        "p95_ms": 21.0,
+        "p99_ms": 40.0,
+        "rps": 0.89,
         "error_rate": 0.0
       }
     },
@@ -99,13 +99,13 @@
       "id": "POST /v1/chat [tool]",
       "category": "POST",
       "passed": true,
-      "reason": "63 reqs, 0 failed, p95 100 ms",
-      "latency_ms": 18.0,
+      "reason": "67 reqs, 0 failed, p95 35 ms",
+      "latency_ms": 12.0,
       "scores": {
-        "p50_ms": 18.0,
-        "p95_ms": 100.0,
-        "p99_ms": 120.0,
-        "rps": 2.16,
+        "p50_ms": 12.0,
+        "p95_ms": 35.0,
+        "p99_ms": 110.0,
+        "rps": 2.3,
         "error_rate": 0.0
       }
     }

@@ -1,0 +1,19 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Based on the given claims, which is a list of strings, generate a list of JSON objects to indicate whether EACH claim contradicts any facts in the retrieval context. The JSON will have 2 fields: 'verdict' and 'reason'.\nThe 'verdict' key should STRICTLY be either 'yes', 'no', or 'borderline', which states whether the given claim agrees with the context. \nProvide a 'reason' ONLY if the answer is 'no' or 'borderline'. \nThe provided claim is drawn from the actual output. Try to provide a correction in the reason using the facts in the retrieval context.\n\n\nExpected JSON format:\n{\n\"verdicts\": [\n{\n\"verdict\": \"yes\"\n},\n{\n\"reason\": <explanation_for_contradiction>,\n\"verdict\": \"no\"\n},\n{\n\"reason\": <explanation_for_uncertainty>,\n\"verdict\": \"borderline\"\n}\n]  \n}\n\n\n**\nIMPORTANT: Please make sure to only return in JSON format, with the 'verdicts' key as a list of JSON objects.\n\nGenerate ONE verdict per claim - length of 'verdicts' MUST equal number of claims.\nNo 'reason' needed for 'yes' verdicts.\nOnly use 'no' if retrieval context DIRECTLY CONTRADICTS the claim - never use prior knowledge.\nUse 'borderline' for claims not backed up by context OR factually incorrect but non-contradictory - do not assume your knowledge.\nVague/speculative language in claims (e.g. 'may have', 'possibility') does NOT count as contradiction.\n\n**\n\nRetrieval Contexts:\nThe Pure RO has 4 replaceable parts.\n\nThe sediment filter needs to be replaced every 6 months or 3,000 litres, whichever comes first.\n\nThe activated carbon filter needs to be replaced every 12 months or 6,000 litres, whichever comes first.\n\nThe RO membrane needs to be replaced every 24 months or 8,000 litres, whichever comes first.\n\nThe UV lamp needs to be replaced every 12 months.\n\nThe app shows remaining filter life as a percentage.\n\nThe FILTER LED on the purifier is green above 10%, turns amber at 10% or below, and turns red at 0%.\n\nAt 0% filter life, the purifier stops dispensing water until the filter is replaced.\n\nOnly genuine Hawa filters should be used.\n\nThe filter service kit is HP-FK-02 for sediment and carbon.\n\nThe membrane kit is HP-MB-08.\n\nUsing non-genuine filters voids the warranty.\n\nTo replace a filter, switch off the purifier, close the inlet water valve, open the front cover, twist the old filter anticlockwise, insert the new filter and twist clockwise until it clicks, open the inlet valve, and switch the purifier on.\n\nTo reset the filter counter, press and hold the FILTER button for 5 seconds until you hear 2 beeps, or use the app under Pure RO > Filters > Reset.\n\nThe first 2 full tanks of water after a filter change must be drained and not drunk.\n\nRO membrane and UV lamp replacement must be done by a Hawa technician.\n\nE1 indicates low inlet water pressure below 0.4 kg/cm2.\n\nE2 indicates a tank full sensor fault.\n\nE3 indicates UV lamp failure, causing the purifier to stop dispensing until replaced by a technician.\n\nE4 indicates a leakage detected, causing the purifier to close the inlet valve automatically.\n\nE5 indicates filter life is at 0%.\n\nThe storage tank has a capacity of 8 litres and should be cleaned every 3 months.\n\nIf the purifier is not used for more than 7 days, the tank should be drained, and the first full tank after returning must be discarded.\n\nClaims:\n['Sediment filter ko every 6 months ya 3,000 litres (jo bhi pehle aaye) badalna chahiye.']\n\nJSON:"
+      }
+    ],
+    "tools": null
+  },
+  "response": {
+    "text": "```json\n{\n\"verdicts\": [\n{\n\"verdict\": \"yes\"\n}\n]  \n}\n```",
+    "tool_calls": [],
+    "tokens_in": 861,
+    "tokens_out": 29
+  }
+}

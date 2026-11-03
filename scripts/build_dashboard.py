@@ -241,7 +241,10 @@ def build_data(reports_dir: Path, thresholds_path: Path) -> dict:
     return {
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "last_run_at": max(times) if times else None,
-        "git_sha": newest.get("git_sha"), "model": newest.get("model"), "llm_mode": newest.get("llm_mode"),
+        # model/mode come from the eval run (the one that exercises the real LLM), not from whichever suite ran last
+        "git_sha": newest.get("git_sha"),
+        "model": (latest.get("evals") or newest).get("model"),
+        "llm_mode": (latest.get("evals") or newest).get("llm_mode"),
         "repo_url": repo_url(),
         "sample": any(r.get("sample") for r in latest.values()),
         "gate": {"passed": gate.gate_passed(checks), "checks": [asdict(c) for c in checks],

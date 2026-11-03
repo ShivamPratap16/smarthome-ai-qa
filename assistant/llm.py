@@ -247,12 +247,19 @@ class CassetteLLM:
 
     def generate(self, system: str, messages: list[dict], tools: list[dict] | None = None,
                  temperature: float = 0.0) -> LLMResponse:
-        """Replay a saved response, or record a new one."""
+        """Replay a saved response, or record a new one.
+
+        Record mode reuses an existing cassette for an identical request instead of calling the
+        model again. Otherwise two cases that share a first turn would overwrite each other's
+        recording, and the later turns (whose history contains the first reply) would no longer
+        match on replay. Set CASSETTE_OVERWRITE=1 to force fresh recordings.
+        """
         path = self.path_for(system, messages, tools)
-        if self.mode == "replay":
-            if not path.exists():
-                raise CassetteMiss(path.stem)
+        reuse = self.mode == "replay" or os.getenv("CASSETTE_OVERWRITE") != "1"
+        if reuse and path.exists():
             return response_from_dict(json.loads(path.read_text(encoding="utf-8"))["response"])
+        if self.mode == "replay":
+            raise CassetteMiss(path.stem)
         response = self.inner.generate(system, messages, tools, temperature)
         self.dir.mkdir(parents=True, exist_ok=True)
         record = {"model": self.model, "request": {"system": system, "messages": messages,

@@ -1,19 +1,19 @@
 {
   "suite": "api",
-  "run_id": "api-20261103-122412",
-  "started_at": "2026-11-03T12:24:12+00:00",
-  "git_sha": "nogit",
+  "run_id": "api-20261103-163230",
+  "started_at": "2026-11-03T16:32:30+00:00",
+  "git_sha": "16ec8df",
   "prompt_version": "v2",
   "model": "gemini-3.5-flash-lite",
   "llm_mode": "fake",
   "summary": {
-    "total": 51,
-    "passed": 51,
+    "total": 54,
+    "passed": 54,
     "failed": 0,
     "pass_rate": 1.0,
     "metrics": {
-      "known_bugs": 3,
-      "duration_s": 15.1
+      "known_bugs": 0,
+      "duration_s": 10.0
     }
   },
   "cases": [
@@ -22,28 +22,28 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 7
+      "latency_ms": 12
     },
     {
       "id": "tests/api/test_contract.py::test_health",
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 1
+      "latency_ms": 2
     },
     {
       "id": "tests/api/test_contract.py::test_chat_manual_question",
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 31
+      "latency_ms": 28
     },
     {
       "id": "tests/api/test_contract.py::test_chat_tool_call_changes_device_state",
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 13
+      "latency_ms": 14
     },
     {
       "id": "tests/api/test_contract.py::test_chat_tool_error_offline_fan_is_reported_not_hidden",
@@ -64,7 +64,7 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 7
+      "latency_ms": 8
     },
     {
       "id": "tests/api/test_contract.py::test_chat_guardrail_refusals[my aadhaar is 1234 5678 9012-pii]",
@@ -85,7 +85,7 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 11
+      "latency_ms": 10
     },
     {
       "id": "tests/api/test_contract.py::test_chat_validation_422[empty]",
@@ -99,7 +99,7 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 1
+      "latency_ms": 2
     },
     {
       "id": "tests/api/test_contract.py::test_chat_validation_422[no-message]",
@@ -120,7 +120,7 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 1
+      "latency_ms": 0
     },
     {
       "id": "tests/api/test_contract.py::test_chat_validation_422[long-session]",
@@ -148,29 +148,28 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 1
+      "latency_ms": 0
     },
     {
       "id": "tests/api/test_contract.py::test_chat_wrong_method_is_405",
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 1
+      "latency_ms": 0
     },
     {
       "id": "tests/api/test_contract.py::test_chat_whitespace_only_message_is_rejected",
-      "category": "known_bug",
-      "passed": false,
-      "known_bug": true,
-      "reason": "BUG: whitespace-only message passes min_length=1 and is sent to the LLM (wastes a call, logs an empty turn). Expected 422.",
-      "latency_ms": 11
+      "category": "contract",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
     },
     {
       "id": "tests/api/test_contract.py::test_list_devices",
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 1
+      "latency_ms": 2
     },
     {
       "id": "tests/api/test_contract.py::test_get_device[lock-main-battery_pct-15]",
@@ -198,7 +197,7 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 1
+      "latency_ms": 0
     },
     {
       "id": "tests/api/test_contract.py::test_unknown_device_is_404[FAN-LIVING]",
@@ -226,7 +225,7 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 11
+      "latency_ms": 10
     },
     {
       "id": "tests/api/test_contract.py::test_reset_unknown_session_is_idempotent",
@@ -240,7 +239,7 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 21
+      "latency_ms": 23
     },
     {
       "id": "tests/api/test_contract.py::test_unknown_route_is_404",
@@ -254,148 +253,146 @@
       "category": "contract",
       "passed": true,
       "reason": "",
-      "latency_ms": 4
+      "latency_ms": 26
     },
     {
       "id": "tests/api/test_fuzz.py::test_api_never_crashes_and_matches_schema[GET /health]",
       "category": "fuzz",
       "passed": true,
       "reason": "",
-      "latency_ms": 173
+      "latency_ms": 332
     },
     {
       "id": "tests/api/test_fuzz.py::test_api_never_crashes_and_matches_schema[POST /v1/chat]",
       "category": "fuzz",
       "passed": true,
       "reason": "",
-      "latency_ms": 1084
+      "latency_ms": 1315
     },
     {
       "id": "tests/api/test_fuzz.py::test_api_never_crashes_and_matches_schema[POST /v1/sessions/{session_id}/reset]",
       "category": "fuzz",
       "passed": true,
       "reason": "",
-      "latency_ms": 693
+      "latency_ms": 777
     },
     {
       "id": "tests/api/test_fuzz.py::test_api_never_crashes_and_matches_schema[GET /v1/devices]",
       "category": "fuzz",
       "passed": true,
       "reason": "",
-      "latency_ms": 85
+      "latency_ms": 160
     },
     {
       "id": "tests/api/test_fuzz.py::test_api_never_crashes_and_matches_schema[GET /v1/devices/{device_id}]",
       "category": "fuzz",
       "passed": true,
       "reason": "",
-      "latency_ms": 688
+      "latency_ms": 781
     },
     {
       "id": "tests/api/test_fuzz.py::test_api_never_crashes_and_matches_schema",
       "category": "fuzz",
       "passed": true,
       "reason": "",
-      "latency_ms": 2735
+      "latency_ms": 3379
     },
     {
       "id": "tests/api/test_inprocess.py::test_llm_failure_returns_503_llm_unavailable[503]",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 16
+      "latency_ms": 29
     },
     {
       "id": "tests/api/test_inprocess.py::test_llm_failure_returns_503_llm_unavailable[429]",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 8
+      "latency_ms": 19
     },
     {
       "id": "tests/api/test_inprocess.py::test_llm_failure_returns_503_llm_unavailable[cassette-miss]",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 8
+      "latency_ms": 14
     },
     {
       "id": "tests/api/test_inprocess.py::test_llm_failure_does_not_leak_internal_details",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 12
+      "latency_ms": 13
     },
     {
       "id": "tests/api/test_inprocess.py::test_service_recovers_after_llm_outage",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 13
+      "latency_ms": 19
     },
     {
       "id": "tests/api/test_inprocess.py::test_guardrail_refusal_works_even_when_llm_is_down",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 8
+      "latency_ms": 9
     },
     {
       "id": "tests/api/test_inprocess.py::test_device_503_is_retried_once_then_succeeds",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 12
+      "latency_ms": 16
     },
     {
       "id": "tests/api/test_inprocess.py::test_device_down_twice_apologises_and_state_unchanged",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 14
+      "latency_ms": 16
     },
     {
       "id": "tests/api/test_inprocess.py::test_get_device_fault_maps_to_http_status",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 11
+      "latency_ms": 13
     },
     {
       "id": "tests/api/test_inprocess.py::test_pii_is_masked_in_response_text",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 8
+      "latency_ms": 11
     },
     {
       "id": "tests/api/test_inprocess.py::test_pii_is_masked_in_tool_call_args_and_logs",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 8
+      "latency_ms": 12
     },
     {
       "id": "tests/api/test_inprocess.py::test_reset_clears_server_side_history",
       "category": "inprocess",
       "passed": true,
       "reason": "",
-      "latency_ms": 13
+      "latency_ms": 17
     },
     {
       "id": "tests/api/test_inprocess.py::test_openapi_documents_bot_reply_fields",
-      "category": "known_bug",
-      "passed": false,
-      "known_bug": true,
-      "reason": "BUG (docs/contract): /v1/chat's 200 response is published as a free-form object - BotReply fields are not in the OpenAPI schema (no response_model), so clients can't rely on Swagger.",
+      "category": "inprocess",
+      "passed": true,
+      "reason": "",
       "latency_ms": 0
     },
     {
       "id": "tests/api/test_inprocess.py::test_openapi_documents_error_responses",
-      "category": "known_bug",
-      "passed": false,
-      "known_bug": true,
-      "reason": "BUG (docs/contract): 503 llm_unavailable and 404 device-not-found are returned by the API but missing from the OpenAPI spec.",
+      "category": "inprocess",
+      "passed": true,
+      "reason": "",
       "latency_ms": 0
     }
   ]

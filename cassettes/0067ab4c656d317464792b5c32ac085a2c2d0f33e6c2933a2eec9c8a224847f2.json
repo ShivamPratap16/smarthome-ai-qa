@@ -1,0 +1,19 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an evaluator. Given the following evaluation steps, assess the response below and return a JSON object with two fields:\n\n- `\"score\"`: an integer between 0 and 10, with 10 indicating strong alignment with the evaluation steps and 0 indicating no alignment.\n- `\"reason\"`: a brief explanation for why the score was given. This must mention specific strengths or shortcomings, referencing relevant details from the input. Do **not** quote the score itself in the explanation.\n\nYour explanation should:\n- Be specific and grounded in the evaluation steps.\n- Mention key details from the test case parameters.\n- Be concise, clear, and focused on the evaluation logic.\n\n\nOnly return valid JSON. Do **not** include any extra commentary or text.\n\n---\n\nEvaluation Steps:\n1. Check whether the facts (numbers, steps, yes/no) in 'actual output' agree with 'expected output'.\n2. Penalise contradictions and invented facts heavily; extra correct details and a Hinglish reply are fine.\n\n\nTest Case:\nInput:\ncustomer: The batteries of my Lock S1 are completely dead and I am locked out of my house. What can I do? \n\nActual Output:\nIf your batteries are completely dead, connect a power bank with a USB-C cable to the emergency USB-C port at the bottom of the outer panel. The lock wakes up in about 10 seconds and you can unlock it with your own fingerprint or PIN. After entering, replace the batteries immediately. You can also use the mechanical backup key behind the logo cover. \n\nExpected Output:\nConnect a power bank with a USB-C cable to the emergency USB-C port at the bottom of the outer panel. The lock wakes up in about 10 seconds and you can unlock with your own fingerprint or PIN. You can also use the mechanical backup key behind the logo cover. Replace the batteries immediately after entering. \n\n\n\nParameters:\nInput, Actual Output, and Expected Output\n\n\n---\n**Example JSON:**\n{\n  \"reason\": \"your concise and informative reason here\",\n  \"score\": 0\n}\n\nJSON:"
+      }
+    ],
+    "tools": null
+  },
+  "response": {
+    "text": "{\n  \"reason\": \"The actual output matches all the facts, steps, and details provided in the expected output regarding the Lock S1 dead battery procedure, including the power bank USB-C method, the 10-second wait time, fingerprint/PIN usage, the mechanical backup key location, and replacing the batteries immediately after entering.\",\n  \"score\": 10\n}",
+    "tool_calls": [],
+    "tokens_in": 449,
+    "tokens_out": 80
+  }
+}

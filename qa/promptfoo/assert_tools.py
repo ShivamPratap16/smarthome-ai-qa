@@ -12,7 +12,7 @@ import re
 
 def parse_tools(output: str) -> list[tuple[str, dict]]:
     """Read the ``[tools] <json>`` footer line back into (name, args) pairs."""
-    match = re.search(r"^\[tools\] (.*)$", output, re.M)
+    match = re.search(r"^\[tools\] (.*)$", output, re.MULTILINE)
     if not match:
         return []
     return [(c["name"], c.get("args") or {}) for c in json.loads(match.group(1))]

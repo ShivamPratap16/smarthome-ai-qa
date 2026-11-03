@@ -1,0 +1,7 @@
+line-length = 120
+target-version = "py313"
+extend-exclude = [".venv", "site", "node_modules"]
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "E402", "B905", "E731"]  # E402: scripts add the repo to sys.path before importing

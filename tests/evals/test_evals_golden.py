@@ -5,7 +5,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from qa.golden.validate import known_chunk_ids, load_golden, validate_case, validate_file
+from qa.golden.validate import (
+    known_chunk_ids,
+    load_golden,
+    validate_case,
+    validate_file,
+)
 
 GOOD = {"id": "x-1", "category": "manual_qa", "product": "aero", "turns": ["hi"],
         "expected_answer": "ans", "expected_context_ids": ["aero/troubleshooting#beeping"],

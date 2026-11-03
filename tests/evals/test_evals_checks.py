@@ -6,10 +6,15 @@ import json
 
 import pytest
 
+from assistant.llm import FakeLLM
 from qa.evals import checks
 from qa.evals.judge import RubricJudge, extract_json, fake_judge_llm, heuristic_scores
-from qa.evals.retrieval_metrics import average_precision, raw_precision, recall, retrieval_scores
-from assistant.llm import FakeLLM
+from qa.evals.retrieval_metrics import (
+    average_precision,
+    raw_precision,
+    recall,
+    retrieval_scores,
+)
 
 
 def test_tool_match_is_loose_on_types_and_ignores_phone():

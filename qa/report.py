@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -63,7 +63,7 @@ def write_report(suite: str, summary: dict, cases: list[dict], **meta) -> Path:
     extra fields you want stored at the top level of the report. Returns the timestamped path.
     """
     reports_dir = meta.pop("reports_dir", None)
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     stamp = now.strftime("%Y%m%d-%H%M%S")
     report = {
         "suite": suite,

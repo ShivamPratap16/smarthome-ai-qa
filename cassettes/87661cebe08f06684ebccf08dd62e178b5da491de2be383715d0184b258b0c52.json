@@ -1,0 +1,19 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an evaluator. Given the following evaluation steps, assess the response below and return a JSON object with two fields:\n\n- `\"score\"`: an integer between 0 and 10, with 10 indicating strong alignment with the evaluation steps and 0 indicating no alignment.\n- `\"reason\"`: a brief explanation for why the score was given. This must mention specific strengths or shortcomings, referencing relevant details from the input. Do **not** quote the score itself in the explanation.\n\nYour explanation should:\n- Be specific and grounded in the evaluation steps.\n- Mention key details from the test case parameters.\n- Be concise, clear, and focused on the evaluation logic.\n\n\nOnly return valid JSON. Do **not** include any extra commentary or text.\n\n---\n\nEvaluation Steps:\n1. Check whether the facts (numbers, steps, yes/no) in 'actual output' agree with 'expected output'.\n2. Penalise contradictions and invented facts heavily; extra correct details and a Hinglish reply are fine.\n\n\nTest Case:\nInput:\ncustomer: Set the living room fan to speed 3 \n\nActual Output:\nYour living room fan has been set to speed 3. \n\nExpected Output:\nThe living room fan is now set to speed 3. \n\n\n\nParameters:\nInput, Actual Output, and Expected Output\n\n\n---\n**Example JSON:**\n{\n  \"reason\": \"your concise and informative reason here\",\n  \"score\": 0\n}\n\nJSON:"
+      }
+    ],
+    "tools": null
+  },
+  "response": {
+    "text": "{\n  \"reason\": \"The actual output successfully conveys the exact same core fact and action as the expected output (setting the living room fan to speed 3) with only minor phrasal variation, which aligns well with the evaluation steps.\",\n  \"score\": 10\n}",
+    "tool_calls": [],
+    "tokens_in": 317,
+    "tokens_out": 60
+  }
+}

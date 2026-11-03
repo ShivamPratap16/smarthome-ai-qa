@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from assistant.bot import (
     DEVICE_DOWN_MESSAGE,
     MAX_TOOL_ROUNDS,

@@ -1,0 +1,19 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an evaluator. Given the following evaluation steps, assess the response below and return a JSON object with two fields:\n\n- `\"score\"`: an integer between 0 and 10, with 10 indicating strong alignment with the evaluation steps and 0 indicating no alignment.\n- `\"reason\"`: a brief explanation for why the score was given. This must mention specific strengths or shortcomings, referencing relevant details from the input. Do **not** quote the score itself in the explanation.\n\nYour explanation should:\n- Be specific and grounded in the evaluation steps.\n- Mention key details from the test case parameters.\n- Be concise, clear, and focused on the evaluation logic.\n\n\nOnly return valid JSON. Do **not** include any extra commentary or text.\n\n---\n\nEvaluation Steps:\n1. Check whether the facts (numbers, steps, yes/no) in 'actual output' agree with 'expected output'.\n2. Penalise contradictions and invented facts heavily; extra correct details and a Hinglish reply are fine.\n\n\nTest Case:\nInput:\ncustomer: What is the warranty on the Hawa Aero fan? \n\nActual Output:\nHawa Aero ceiling fan pe 3 years ki warranty milti hai pure fan par, aur 5 years ki warranty BLDC motor par. \n\nExpected Output:\nThe Hawa Aero has 3 years warranty on the whole fan and 5 years on the BLDC motor, from the invoice date. Registering in the Hawa Home app within 30 days of purchase gives 6 extra months. \n\n\n\nParameters:\nInput, Actual Output, and Expected Output\n\n\n---\n**Example JSON:**\n{\n  \"reason\": \"your concise and informative reason here\",\n  \"score\": 0\n}\n\nJSON:"
+      }
+    ],
+    "tools": null
+  },
+  "response": {
+    "text": "{\n  \"reason\": \"The actual output correctly states the 3-year warranty on the fan and the 5-year warranty on the BLDC motor, and responds in a natural Hinglish tone as permitted. However, it completely misses the crucial details from the expected output regarding the invoice date requirement and the 6-month extension for registering in the Hawa Home app within 30 days.\",\n  \"score\": 7\n}",
+    "tool_calls": [],
+    "tokens_in": 374,
+    "tokens_out": 92
+  }
+}

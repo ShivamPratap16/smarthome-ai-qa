@@ -1,0 +1,273 @@
+{
+  "suite": "tool_calling",
+  "run_id": "tool_calling-20261103-220215",
+  "started_at": "2026-11-03T16:32:15+00:00",
+  "git_sha": "16ec8df",
+  "prompt_version": "v2",
+  "model": "fake-scripted",
+  "llm_mode": "fake",
+  "summary": {
+    "metrics": {
+      "known_bugs": 0,
+      "p95_latency_ms": 3
+    },
+    "total": 36,
+    "passed": 36,
+    "failed": 0,
+    "pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "test_follow_up_uses_previous_turn_context",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 10
+    },
+    {
+      "id": "test_retrieval_uses_previous_question_for_follow_ups",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_reset_clears_history",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 3
+    },
+    {
+      "id": "test_sessions_are_isolated",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_blocked_turn_does_not_poison_the_next_turn",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_conversation_continues_after_llm_outage",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_hinglish_follow_up_keeps_device_context",
+      "category": "multi_turn",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 3
+    },
+    {
+      "id": "test_single_503_is_retried_and_recovers",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_double_503_gives_fixed_apology_and_offers_ticket",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_ticket_double_503_gives_ticket_down_message",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_user_can_retry_after_device_outage",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 3
+    },
+    {
+      "id": "test_non_503_errors_are_not_retried",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_max_four_tool_rounds_then_polite_stop",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_four_rounds_then_answer_is_allowed",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_empty_model_answer_falls_back_to_i_dont_know",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_history_is_consistent_after_normal_tool_turn",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_history_is_consistent_after_503_in_parallel_calls",
+      "category": "recovery",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 3
+    },
+    {
+      "id": "test_set_speed_with_exact_args",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_invalid_speed_rejected_and_device_unchanged[0]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_invalid_speed_rejected_and_device_unchanged[6]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_invalid_speed_rejected_and_device_unchanged[7]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_invalid_speed_rejected_and_device_unchanged[-1]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_invalid_speed_rejected_and_device_unchanged[2.5]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_invalid_speed_rejected_and_device_unchanged[True]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_float_speed_that_is_a_whole_number_is_accepted",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_offline_device_returns_409_and_bot_explains",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_unknown_device_returns_404",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_wrong_device_type_returns_400",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_missing_argument_is_a_clean_400_not_a_crash",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_status_then_action_in_one_turn",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_warranty_lookup[HA-AERO-1001-active]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_warranty_lookup[ha-lock-2001-expired]",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_ticket_needs_phone_model_asks_first",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 3
+    },
+    {
+      "id": "test_ticket_with_invalid_phone_is_rejected",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 1
+    },
+    {
+      "id": "test_ticket_creation_masks_phone_in_logs_and_reply",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 2
+    },
+    {
+      "id": "test_tool_declarations_match_the_device_api",
+      "category": "tool_args",
+      "passed": true,
+      "reason": "",
+      "latency_ms": 0
+    }
+  ]
+}

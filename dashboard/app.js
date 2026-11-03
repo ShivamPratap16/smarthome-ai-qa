@@ -98,7 +98,7 @@
         foot: kpiStatus("evals", "hallucination_rate", k.hallucination_rate) || "Needs eval report" },
       { label: "Red-team block rate", value: pct(k.redteam_block_rate), na: k.redteam_block_rate == null,
         foot: kpiStatus("redteam", "pass_rate", k.redteam_block_rate) || "Needs red-team report" },
-      { label: "p95 latency", value: fmt("p95_latency_ms", k.p95_latency_ms), na: k.p95_latency_ms == null,
+      { label: k.p95_source === "load" ? "API p95 latency (LLM stubbed)" : "p95 latency", value: fmt("p95_latency_ms", k.p95_latency_ms), na: k.p95_latency_ms == null,
         foot: k.p95_source === "load" ? kpiStatus("load", "p95_latency_ms", k.p95_latency_ms) : k.p95_source ? `From ${k.p95_source} run` : "Needs load report" },
       { label: "Cost per 100 chats", value: k.cost_per_100_chats == null ? "—" : "$" + k.cost_per_100_chats.toFixed(k.cost_per_100_chats < 0.1 ? 3 : 2), na: k.cost_per_100_chats == null,
         foot: k.cost_per_100_chats == null ? (suiteByKey.evals?.present ? "No cost in eval report" : "Needs eval report") : "LLM token cost, from eval run" },

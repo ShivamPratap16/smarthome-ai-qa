@@ -167,7 +167,7 @@ def make_deepeval_model(llm: LLMClient, model_name: str = "gemini"):
             self.name = model_name
             self.calls = 0
 
-        def load_model(self):  # noqa: D401 - DeepEval API
+        def load_model(self):
             return self.llm
 
         def generate(self, prompt: str, schema=None):
