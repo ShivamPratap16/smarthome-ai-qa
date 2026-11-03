@@ -1,0 +1,104 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[general/service#tickets-and-visit-times] Service: Tickets and Visit Times\nYou can raise a service ticket in the Hawa Home app, by asking the Hawa assistant, or by calling\nsupport. A ticket needs the device, a short description of the issue and a mobile number.\nTicket numbers look like HW-100001. A technician visits within 48 hours in metro cities and\nwithin 72 hours in other cities. Visits under warranty are free. Out of warranty, the visit\ncharge is Rs 299 plus the cost of parts. Service hours are 9 AM to 9 PM, all 7 days.\nReplacement: if a product has a manufacturing defect within 7 days of delivery, Hawa replaces it.\n\n[aero/speed-settings#speeds-1-to-5] Speed Settings: Speeds 1 to 5\nThe Aero has 5 fixed speeds. Approximate motor speeds are:\n- Speed 1: 110 RPM (about 6 W) — quiet, good for night\n- Speed 2: 170 RPM (about 10 W)\n- Speed 3: 230 RPM (about 16 W)\n- Speed 4: 290 RPM (about 24 W)\n- Speed 5: 350 RPM (about 32 W)\nYou can change the fan speed with the remote (buttons 1 to 5), with the Hawa Home app, or by\nasking the Hawa assistant. The fan remembers the last speed after a power cut.\n\n[aero/speed-settings#boost-and-sleep-modes] Speed Settings: Boost and Sleep Modes\nBoost mode runs the fan at 380 RPM, above speed 5, for a fixed 2 hours. After 2 hours the fan\ngoes back to the speed it was on before Boost. Press the \"B\" button on the remote to start or\nstop Boost. Sleep mode (the moon button) lowers the speed by one step every 60 minutes until it\nreaches speed 1, and the fan LED dims to 10% brightness. Sleep mode does not switch the fan off;\nuse the timer (1, 2, 4 or 8 hours) if you want the fan to stop on its own.\n\n[pure/care#cleaning-the-storage-tank] Care: Cleaning the Storage Tank\nClean the 8 litre storage tank every 3 months. Switch off the purifier, drain all water using\nthe dispense button, wipe the inside of the tank with a clean soft cloth and food-grade\ncleaning solution, rinse twice with purified water and switch on again. If the purifier is not\nused for more than 7 days (for example during travel), drain the tank and discard the first\nfull tank after you return.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Set the living room fan to speed 7"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "",
+    "tool_calls": [
+      {
+        "name": "set_fan_speed",
+        "args": {
+          "device_id": "fan-living",
+          "speed": 5
+        },
+        "signature": "EmAKXgFpFH0T4R0epTXNxkCxV5NdleFkK3cDKWdJppFHWA+6M15Mp85gOZYWcDZoenMsNCuF0kt5iaHZV+8S3MPyFbU4fGcxcSUrI/WsKpupOQewvK8nsXXdHFoR3G/g3sY="
+      }
+    ],
+    "tokens_in": 1110,
+    "tokens_out": 26
+  }
+}

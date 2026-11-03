@@ -1,0 +1,103 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[pure/troubleshooting#error-codes] Troubleshooting: Error Codes\n- E1: low inlet water pressure (below 0.4 kg/cm2). Check the inlet valve and water supply.\n- E2: tank full sensor fault. Switch off for 1 minute and on again; if it repeats, raise a ticket.\n- E3: UV lamp failure. The purifier stops dispensing until the UV lamp is replaced by a technician.\n- E4: leakage detected. The purifier closes the inlet valve automatically. Switch it off, wipe\n  the area dry and raise a service ticket.\n- E5: filter life 0%. Replace the filter and reset the counter.\n\n[general/service#tickets-and-visit-times] Service: Tickets and Visit Times\nYou can raise a service ticket in the Hawa Home app, by asking the Hawa assistant, or by calling\nsupport. A ticket needs the device, a short description of the issue and a mobile number.\nTicket numbers look like HW-100001. A technician visits within 48 hours in metro cities and\nwithin 72 hours in other cities. Visits under warranty are free. Out of warranty, the visit\ncharge is Rs 299 plus the cost of parts. Service hours are 9 AM to 9 PM, all 7 days.\nReplacement: if a product has a manufacturing defect within 7 days of delivery, Hawa replaces it.\n\n[pure/water-quality#tds-and-taste] Water Quality: TDS and Taste\nTDS (total dissolved solids) of the output water is shown on the display. The Mineraliser keeps\noutput TDS between 50 and 150 ppm; the factory setting is 80 ppm. You can adjust it in the app\n(Pure RO > Water Taste) within that range. If output TDS stays above 150 ppm for more than\n24 hours, the membrane may be worn out; raise a service ticket.\nThe Hawa Pure RO is not a medical device. It improves drinking water quality but Hawa makes no\nclaim that it treats, cures or prevents any disease. For health questions, please consult a\ndoctor.\n\n[general/contact#support-and-privacy-policy] Contact: Support and Privacy Policy\nCustomer support: toll-free 1800-000-4292 (9 AM to 9 PM, all days) or email\ncare@hawahome.example. Hawa will never ask for your OTP, passwords, bank details or Aadhaar\nnumber. Share your mobile number only to raise a service ticket. Chat logs are stored with\nphone numbers and email addresses masked, and are deleted after 90 days.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Raise a service ticket for my kitchen purifier, it is leaking."
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "",
+    "tool_calls": [
+      {
+        "name": "get_device_status",
+        "args": {
+          "device_id": "purifier-kitchen"
+        },
+        "signature": "EmAKXgFpFH0T0k2ja2SGVVX4wVDdc3A/tShicTxutp8/HBQsePW9noqyAH+E59R5mnoapIDx8FdYxKz3KF1ouJb6bqqz4UfM+KCfZ14e69ODjLE3rtOJWNQSUgETukrwbX0="
+      }
+    ],
+    "tokens_in": 1083,
+    "tokens_out": 23
+  }
+}

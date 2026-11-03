@@ -1,0 +1,95 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[lock/batteries#low-battery-warning] Batteries: Low Battery Warning\nThe Lock S1 runs on 8 x AA alkaline batteries (1.5 V). Typical battery life is about 10 months\nwith 10 unlocks a day. Do not use rechargeable 1.2 V batteries; the lock will show low battery\ntoo early.\n- At 20% battery: the lock beeps 3 times after every unlock and the keypad shows a red battery\n  icon. The app sends a \"Low battery\" notification.\n- At 10% battery: the lock still works for about 50 more unlocks. Replace batteries now.\n- At 5% battery: fingerprint and app unlock are disabled to save power; only PIN, card and\n  mechanical key work.\nReplace all 8 batteries at the same time. Your users and settings are not lost when you\nchange batteries.\n\n[lock/users#fingerprint-enrolment] Users: Fingerprint Enrolment\nThe first fingerprint you add becomes the Admin fingerprint. Only an admin can add or delete\nother users.\nUsing the app: open Hawa Home > Lock S1 > Users > Add user > Fingerprint, then place the same\nfinger on the sensor 6 times, lifting it between each touch, until the app shows \"Enrolled\".\nUsing the keypad: press * then #, enter the admin PIN, press 1 (Add user) then 1 (Fingerprint),\nand place the finger 6 times. The lock gives 2 short beeps when enrolment is successful.\nTips: enrol at least 2 fingers per person, keep fingers dry and clean, and enrol children's\nfingers again every 6 months because fingerprints change as they grow.\n\n[lock/security#auto-lock-and-wrong-attempts] Security: Auto-lock and Wrong Attempts\nAuto-lock is on by default and locks the door 10 seconds after it closes. You can change the\ndelay between 5 and 60 seconds in the app (Lock S1 > Settings > Auto-lock).\nAfter 5 wrong fingerprint, PIN or card attempts in a row, the keypad is frozen for 3 minutes\nand the lock sounds an alarm. The app also sends a security alert to the admin. Use a\n\"scramble PIN\" (extra random digits before or after your real PIN, up to 16 digits total)\nto hide your PIN from people watching.\nFor your safety, Hawa support and the Hawa assistant never help anyone bypass, force open or\nunlock a lock without the owner's own fingerprint, PIN, card, app or key.\n\n[lock/overview#specifications-and-unlock-methods] Overview: Specifications and Unlock Methods\nThe Hawa Lock S1 is a smart door lock for doors 35 mm to 90 mm thick. It can be unlocked in\n5 ways: fingerprint, PIN code, RFID card, the Hawa Home app (Bluetooth, or Wi-Fi via the Hawa\nBridge), and a mechanical backup key. It stores up to 100 fingerprints, 50 PIN codes\n(each 6 to 10 digits) and 50 RFID cards. The outer panel is rated IP54 (splash resistant).\nThe tamper alarm sounds at 90 dB.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "My door lock beeps 3 times after every unlock. Why?"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "Based on the Hawa Lock S1 manual, 3 beeps after every unlock (along with a red battery icon on the keypad and a \"Low battery\" app notification) indicates that your lock's battery level has dropped to **20%**. \n\nHere are a few quick tips regarding your batteries:\n* The Lock S1 runs on **8 x AA alkaline batteries (1.5 V)**. \n* Please do not use rechargeable 1.2 V batteries, as they will trigger low-battery warnings too early.\n* When replacing them, **replace all 8 batteries at the same time**. Your users and settings will not be lost when you change them.",
+    "tool_calls": [],
+    "tokens_in": 1211,
+    "tokens_out": 141
+  }
+}

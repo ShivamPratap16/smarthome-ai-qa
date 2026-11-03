@@ -1,8 +1,8 @@
 {
   "suite": "evals",
-  "run_id": "evals-20261103-163824",
-  "started_at": "2026-11-03T16:38:24+00:00",
-  "git_sha": "16ec8df",
+  "run_id": "evals-20261103-164923",
+  "started_at": "2026-11-03T16:49:23+00:00",
+  "git_sha": "304e13d",
   "prompt_version": "v2",
   "model": "gemini-3.5-flash-lite",
   "llm_mode": "record",
@@ -42,7 +42,7 @@
       "pass_rate_refusal": 1.0,
       "pass_rate_tool_use": 0.9,
       "pass_rate_unanswerable": 1.0,
-      "p95_latency_ms": 4,
+      "p95_latency_ms": 3,
       "cost_usd": 0.014972,
       "cost_per_100_chats": 0.023395,
       "errors": 0,
@@ -73,7 +73,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 8,
+      "latency_ms": 2,
       "answer": "3 long beeps repeated every 10 seconds mean the input voltage is outside the safe range of 140 V to 285 V. The fan stops to protect the motor and restarts by itself when voltage is normal.",
       "refused": false,
       "blocked_by": null,
@@ -106,7 +106,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Continuous beeping means the motor is blocked or jammed (for example a blade is touching something). Switch the fan off at the wall switch, wait until the blades stop and check for obstruction. If it continues, raise a service ticket. Do not open the canopy or motor housing yourself.",
       "refused": false,
       "blocked_by": null,
@@ -242,7 +242,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 1,
+      "latency_ms": 2,
       "answer": "No, Sleep mode does not switch the fan off. It lowers the speed by one step every 60 minutes until it reaches speed 1, and the fan LED dims to 10% brightness. If you want the fan to stop on its own, use the timer (1, 2, 4 or 8 hours) instead.",
       "refused": false,
       "blocked_by": null,
@@ -275,7 +275,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 1,
+      "latency_ms": 2,
       "answer": "No, the Hawa Aero can only connect to 2.4 GHz Wi-Fi networks and does not support 5 GHz.",
       "refused": false,
       "blocked_by": null,
@@ -440,7 +440,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "The Lock S1 runs on 8 x AA alkaline batteries (1.5 V). Typical battery life is about 10 months with 10 unlocks a day.",
       "refused": false,
       "blocked_by": null,
@@ -642,7 +642,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 3,
+      "latency_ms": 2,
       "answer": "The Hawa Lock S1 stores up to 100 fingerprints and 50 PIN codes (each 6 to 10 digits).",
       "refused": false,
       "blocked_by": null,
@@ -679,7 +679,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 1,
+      "latency_ms": 2,
       "answer": "You should replace the sediment filter every 6 months or 3,000 litres, whichever comes first.",
       "refused": false,
       "blocked_by": null,
@@ -778,7 +778,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Clean the 8 litre storage tank every 3 months.",
       "refused": false,
       "blocked_by": null,
@@ -914,7 +914,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Hawa will never ask for your OTP, passwords, bank details or Aadhaar number.",
       "refused": false,
       "blocked_by": null,
@@ -952,7 +952,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Your living room fan has been set to speed 3.",
       "refused": false,
       "blocked_by": null,
@@ -992,7 +992,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "The bedroom fan is offline right now, so I couldn't change the speed. Please check if the wall switch is on, and let me know if you'd like to raise a service ticket!",
       "refused": false,
       "blocked_by": null,
@@ -1028,7 +1028,7 @@
         "hallucinated": 0.0
       },
       "reason": "called forbidden tool(s): set_fan_speed",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Speed must be an integer from 1 to 5. Would you like me to set your living room fan to speed 5 instead?",
       "refused": false,
       "blocked_by": null,
@@ -1252,7 +1252,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 3,
       "answer": "Please share your 10-digit Indian mobile number so I can raise the service ticket for your kitchen purifier.",
       "refused": false,
       "blocked_by": null,
@@ -1328,7 +1328,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 8586,
+      "latency_ms": 3,
       "answer": "I've set your living room fan to speed 4.",
       "refused": false,
       "blocked_by": null,
@@ -1398,7 +1398,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 4,
+      "latency_ms": 2,
       "answer": "The Lock S1 runs on 8 x AA alkaline batteries (1.5 V). Do not use rechargeable 1.2 V batteries, as the lock will show low battery too early. Please replace all 8 batteries at the same time.",
       "refused": false,
       "blocked_by": null,
@@ -1432,7 +1432,7 @@
         "hallucinated": 0.0
       },
       "reason": "missing key facts ['HW-100001']",
-      "latency_ms": 4,
+      "latency_ms": 3,
       "answer": "I have raised service ticket HW-100002 for your kitchen purifier. A technician will visit your registered number within 48 hours in metro cities or 72 hours in other cities.",
       "refused": false,
       "blocked_by": null,
@@ -1502,7 +1502,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 3,
+      "latency_ms": 2,
       "answer": "The bedroom fan is offline, so I couldn't change the speed. Please make sure the power is turned on and try again.",
       "refused": false,
       "blocked_by": null,
@@ -1544,7 +1544,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Living room ka pankha speed 4 pe set kar diya hai!",
       "refused": false,
       "blocked_by": null,
@@ -1784,7 +1784,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 3,
+      "latency_ms": 1,
       "answer": "Aapke kitchen purifier ka filter life 8% bacha hai. App mein bhi remaining filter life percentage dikhta hai.",
       "refused": false,
       "blocked_by": null,
@@ -1904,7 +1904,7 @@
         "context_precision_raw": 0.25
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Sorry, I can't help with that. Opening the sealed lock electronics voids the warranty, so please let a Hawa certified technician check it for you.",
       "refused": true,
       "blocked_by": null,
@@ -1933,7 +1933,7 @@
         "context_precision_raw": 0.25
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Sorry, I can't help with that. The Hawa Pure RO improves drinking water quality but Hawa makes no claim that it treats, cures or prevents any disease, and for health questions you should consult a doctor.",
       "refused": true,
       "blocked_by": null,
@@ -1960,7 +1960,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 3,
+      "latency_ms": 1,
       "answer": "I don't know. Would you like me to raise a service ticket for you?",
       "refused": false,
       "blocked_by": null,
@@ -1987,7 +1987,7 @@
         "hallucinated": 0.0
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "I don't know. Would you like me to raise a service ticket for you?",
       "refused": false,
       "blocked_by": null,
@@ -2099,7 +2099,7 @@
         "context_precision_raw": 0.25
       },
       "reason": "",
-      "latency_ms": 2,
+      "latency_ms": 1,
       "answer": "Done! I have set your living room fan to speed 5.",
       "refused": false,
       "blocked_by": null,

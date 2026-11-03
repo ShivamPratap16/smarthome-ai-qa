@@ -1,0 +1,113 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[aero/troubleshooting#fan-offline-in-app] Troubleshooting: Fan Offline in App\nIf the app shows the fan as \"Offline\":\n1. Check the wall switch is on and the fan works with the remote.\n2. Make sure your router is on 2.4 GHz. The Aero cannot connect to 5 GHz-only networks.\n3. Check the LED colour (see LED indicator codes).\n4. If you changed your Wi-Fi name or password, re-pair the fan from the app.\n5. Move the router closer; the fan needs a signal of at least -70 dBm.\nA fan that is offline can still be controlled with the IR remote, but not from the app or\nthe assistant.\n\n[aero/remote-control#pairing-and-batteries] Remote Control: Pairing and Batteries\nThe HR-10 remote uses 2 x AAA batteries (do not use the CR2032 coin cell from older Hawa remotes).\nIf the fan does not respond, replace the batteries first. To pair a new remote: switch the fan\non at the wall and, within 30 seconds, hold the \"1\" and \"5\" buttons together for 3 seconds.\nThe fan beeps once when the remote is paired. One fan can be paired with up to 2 remotes.\n\n[aero/speed-settings#boost-and-sleep-modes] Speed Settings: Boost and Sleep Modes\nBoost mode runs the fan at 380 RPM, above speed 5, for a fixed 2 hours. After 2 hours the fan\ngoes back to the speed it was on before Boost. Press the \"B\" button on the remote to start or\nstop Boost. Sleep mode (the moon button) lowers the speed by one step every 60 minutes until it\nreaches speed 1, and the fan LED dims to 10% brightness. Sleep mode does not switch the fan off;\nuse the timer (1, 2, 4 or 8 hours) if you want the fan to stop on its own.\n\n[aero/care#cleaning-and-maintenance] Care: Cleaning and Maintenance\nSwitch off the fan at the wall before cleaning. Wipe the blades with a dry or slightly damp\nmicrofibre cloth once a month. Do not use water sprays, petrol, thinner or harsh cleaners on the\nblades or motor. The BLDC motor is sealed and needs no oiling. Never hang anything on the fan.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Is my bedroom fan online?"
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "name": "get_device_status",
+            "args": {
+              "device_id": "fan-bedroom"
+            },
+            "signature": "EmAKXgFpFH0TEw4WyOZYHe63ai6QLD98G8NatWNt/cldgM6bzV/b4XCnkPUV6XmfchXgxV6EAEfI2KfpGQqzxjKXgXZlGtpbtazbJxqEGoh5rYDEOC+wMCTrhzHoEyVKt1c="
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "name": "get_device_status",
+        "content": "{\"device_id\": \"fan-bedroom\", \"name\": \"Bedroom fan\", \"room\": \"bedroom\", \"product\": \"Hawa Aero\", \"type\": \"fan\", \"online\": false, \"speed\": 0, \"serial\": \"HA-AERO-1002\"}"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "No, your bedroom fan is currently offline. \n\nIf you're having trouble getting it back online, here are a few quick steps from the troubleshooting guide:\n1. **Check the wall switch:** Make sure it is switched on and the fan works with the remote.\n2. **Wi-Fi band:** Ensure your router is broadcasting on 2.4 GHz (the Aero cannot connect to 5 GHz-only networks).\n3. **Wi-Fi changes:** If you recently changed your Wi-Fi name or password, you will need to re-pair the fan from the app.\n4. **Signal strength:** If the router is far away, try moving it closer (the fan needs a signal of at least -70 dBm).\n\nPlease note that while the fan is offline, you can still control it using the IR remote control! Let me know if you need help with anything else.",
+    "tool_calls": [],
+    "tokens_in": 1119,
+    "tokens_out": 188
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[aero/troubleshooting#led-indicator-codes] Troubleshooting: LED Indicator Codes\nThe status LED on the bottom of the fan shows:\n- Solid blue: connected to Wi-Fi and the Hawa cloud.\n- Fast blinking blue (2 times per second): Wi-Fi pairing mode is active (lasts 3 minutes).\n- Slow blinking blue (once every 2 seconds): connected to Wi-Fi but cannot reach the Hawa cloud.\n- Solid amber: not connected to Wi-Fi; the fan still works with the remote.\n- Red blinking twice, then pause: motor overheat. The fan stops for 15 minutes to cool down and\n  then restarts on speed 1.\n- No light: no power, or the LED was switched off in the app (Settings > Night Light).\n\n[lock/users#fingerprint-enrolment] Users: Fingerprint Enrolment\nThe first fingerprint you add becomes the Admin fingerprint. Only an admin can add or delete\nother users.\nUsing the app: open Hawa Home > Lock S1 > Users > Add user > Fingerprint, then place the same\nfinger on the sensor 6 times, lifting it between each touch, until the app shows \"Enrolled\".\nUsing the keypad: press * then #, enter the admin PIN, press 1 (Add user) then 1 (Fingerprint),\nand place the finger 6 times. The lock gives 2 short beeps when enrolment is successful.\nTips: enrol at least 2 fingers per person, keep fingers dry and clean, and enrol children's\nfingers again every 6 months because fingerprints change as they grow.\n\n[aero/speed-settings#speeds-1-to-5] Speed Settings: Speeds 1 to 5\nThe Aero has 5 fixed speeds. Approximate motor speeds are:\n- Speed 1: 110 RPM (about 6 W) — quiet, good for night\n- Speed 2: 170 RPM (about 10 W)\n- Speed 3: 230 RPM (about 16 W)\n- Speed 4: 290 RPM (about 24 W)\n- Speed 5: 350 RPM (about 32 W)\nYou can change the fan speed with the remote (buttons 1 to 5), with the Hawa Home app, or by\nasking the Hawa assistant. The fan remembers the last speed after a power cut.\n\n[aero/speed-settings#boost-and-sleep-modes] Speed Settings: Boost and Sleep Modes\nBoost mode runs the fan at 380 RPM, above speed 5, for a fixed 2 hours. After 2 hours the fan\ngoes back to the speed it was on before Boost. Press the \"B\" button on the remote to start or\nstop Boost. Sleep mode (the moon button) lowers the speed by one step every 60 minutes until it\nreaches speed 1, and the fan LED dims to 10% brightness. Sleep mode does not switch the fan off;\nuse the timer (1, 2, 4 or 8 hours) if you want the fan to stop on its own.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Is my bedroom fan online?"
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "name": "get_device_status",
+            "args": {
+              "device_id": "fan-bedroom"
+            },
+            "signature": "EmAKXgFpFH0TEw4WyOZYHe63ai6QLD98G8NatWNt/cldgM6bzV/b4XCnkPUV6XmfchXgxV6EAEfI2KfpGQqzxjKXgXZlGtpbtazbJxqEGoh5rYDEOC+wMCTrhzHoEyVKt1c="
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "name": "get_device_status",
+        "content": "{\"device_id\": \"fan-bedroom\", \"name\": \"Bedroom fan\", \"room\": \"bedroom\", \"product\": \"Hawa Aero\", \"type\": \"fan\", \"online\": false, \"speed\": 0, \"serial\": \"HA-AERO-1002\"}"
+      },
+      {
+        "role": "assistant",
+        "content": "No, your bedroom fan is currently offline. \n\nIf you're having trouble getting it back online, here are a few quick steps from the troubleshooting guide:\n1. **Check the wall switch:** Make sure it is switched on and the fan works with the remote.\n2. **Wi-Fi band:** Ensure your router is broadcasting on 2.4 GHz (the Aero cannot connect to 5 GHz-only networks).\n3. **Wi-Fi changes:** If you recently changed your Wi-Fi name or password, you will need to re-pair the fan from the app.\n4. **Signal strength:** If the router is far away, try moving it closer (the fan needs a signal of at least -70 dBm).\n\nPlease note that while the fan is offline, you can still control it using the IR remote control! Let me know if you need help with anything else."
+      },
+      {
+        "role": "user",
+        "content": "Then set it to speed 2"
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "name": "set_fan_speed",
+            "args": {
+              "device_id": "fan-bedroom",
+              "speed": 2
+            },
+            "signature": "EmAKXgFpFH0TSQ3QvnIXKuq1SwpWB5hBYXSNTZxONvS9wpnGBkhzPeDB06mSv8N3hQKzd8fz/ldBKdiRSmf8Fs7VCbix2ab+shYx9Eks2LQ1NWITzIima/iRECn6qjhudc8="
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "name": "set_fan_speed",
+        "content": "{\"error\": \"409: fan-bedroom is offline\"}"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "Since your bedroom fan is currently offline, I couldn't send the command to change the speed through the app. \n\nHowever, because the fan is offline, you can still easily change the speed using your physical Hawa Aero remote control (just press the **2** button)!",
+    "tool_calls": [],
+    "tokens_in": 1524,
+    "tokens_out": 57
+  }
+}

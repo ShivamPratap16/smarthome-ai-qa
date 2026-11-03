@@ -1,0 +1,95 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[pure/care#cleaning-the-storage-tank] Care: Cleaning the Storage Tank\nClean the 8 litre storage tank every 3 months. Switch off the purifier, drain all water using\nthe dispense button, wipe the inside of the tank with a clean soft cloth and food-grade\ncleaning solution, rinse twice with purified water and switch on again. If the purifier is not\nused for more than 7 days (for example during travel), drain the tank and discard the first\nfull tank after you return.\n\n[pure/overview#specifications] Overview: Specifications\nThe Hawa Pure RO is a wall-mounted RO + UV + Mineraliser water purifier with an 8 litre storage\ntank. It purifies about 15 litres per hour. It is suitable for input water with TDS up to\n2000 ppm and inlet water pressure between 0.4 and 4 kg/cm2. Power use is 36 W while purifying.\nWater recovery is up to 60%, which means about 6 litres of pure water for every 10 litres of\ninput water. The rejected water can be used for mopping or plants.\n\n[pure/troubleshooting#error-codes] Troubleshooting: Error Codes\n- E1: low inlet water pressure (below 0.4 kg/cm2). Check the inlet valve and water supply.\n- E2: tank full sensor fault. Switch off for 1 minute and on again; if it repeats, raise a ticket.\n- E3: UV lamp failure. The purifier stops dispensing until the UV lamp is replaced by a technician.\n- E4: leakage detected. The purifier closes the inlet valve automatically. Switch it off, wipe\n  the area dry and raise a service ticket.\n- E5: filter life 0%. Replace the filter and reset the counter.\n\n[lock/users#fingerprint-enrolment] Users: Fingerprint Enrolment\nThe first fingerprint you add becomes the Admin fingerprint. Only an admin can add or delete\nother users.\nUsing the app: open Hawa Home > Lock S1 > Users > Add user > Fingerprint, then place the same\nfinger on the sensor 6 times, lifting it between each touch, until the app shows \"Enrolled\".\nUsing the keypad: press * then #, enter the admin PIN, press 1 (Add user) then 1 (Fingerprint),\nand place the finger 6 times. The lock gives 2 short beeps when enrolment is successful.\nTips: enrol at least 2 fingers per person, keep fingers dry and clean, and enrol children's\nfingers again every 6 months because fingerprints change as they grow.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How often should I clean the storage tank of the purifier?"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "You should clean the 8-litre storage tank of the Hawa Pure RO every **3 months**. \n\nHere are the steps to clean it:\n1. Switch off the purifier.\n2. Drain all water using the dispense button.\n3. Wipe the inside of the tank with a clean soft cloth and a food-grade cleaning solution.\n4. Rinse twice with purified water.\n5. Switch the purifier back on.\n\n*(Note: If the purifier is not used for more than 7 days—such as when you are traveling—be sure to drain the tank completely and discard the first full tank of water after you return.)*",
+    "tool_calls": [],
+    "tokens_in": 1069,
+    "tokens_out": 134
+  }
+}

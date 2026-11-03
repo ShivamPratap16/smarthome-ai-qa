@@ -1,0 +1,103 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[general/warranty#coverage-periods] Warranty: Coverage Periods\nWarranty starts from the date on the purchase invoice:\n- Hawa Aero ceiling fan: 3 years on the whole fan, and 5 years on the BLDC motor.\n- Hawa Lock S1: 2 years on electronics and 5 years on the mechanical lock body.\n- Hawa Pure RO: 1 year on the purifier. Filters, the RO membrane and the UV lamp are\n  consumables and are not covered by warranty.\nRegister your product in the Hawa Home app within 30 days of purchase to get 6 extra months of\nwarranty (one time per product). You can check your warranty with your product serial number,\nfor example HA-AERO-1001. The serial number is printed on the box and on a sticker on the product.\n\n[general/warranty#what-voids-the-warranty] Warranty: What Voids the Warranty\nThe warranty does not cover, and becomes void in case of:\n- Opening the fan motor housing, the sealed lock electronics, or the purifier's sealed parts.\n- Installation or repair by anyone who is not a Hawa certified technician.\n- Damage from voltage outside the rated range, lightning, fire, flood or accidents.\n- Using non-genuine filters or spare parts.\n- Physical damage, rust caused by misuse, or a removed or changed serial number sticker.\nNormal wear of remote buttons and the cosmetic finish is not covered.\n\n[pure/troubleshooting#error-codes] Troubleshooting: Error Codes\n- E1: low inlet water pressure (below 0.4 kg/cm2). Check the inlet valve and water supply.\n- E2: tank full sensor fault. Switch off for 1 minute and on again; if it repeats, raise a ticket.\n- E3: UV lamp failure. The purifier stops dispensing until the UV lamp is replaced by a technician.\n- E4: leakage detected. The purifier closes the inlet valve automatically. Switch it off, wipe\n  the area dry and raise a service ticket.\n- E5: filter life 0%. Replace the filter and reset the counter.\n\n[aero/troubleshooting#fan-offline-in-app] Troubleshooting: Fan Offline in App\nIf the app shows the fan as \"Offline\":\n1. Check the wall switch is on and the fan works with the remote.\n2. Make sure your router is on 2.4 GHz. The Aero cannot connect to 5 GHz-only networks.\n3. Check the LED colour (see LED indicator codes).\n4. If you changed your Wi-Fi name or password, re-pair the fan from the app.\n5. Move the router closer; the fan needs a signal of at least -70 dBm.\nA fan that is offline can still be controlled with the IR remote, but not from the app or\nthe assistant.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Please check warranty for serial HA-PURE-3001"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "",
+    "tool_calls": [
+      {
+        "name": "check_warranty",
+        "args": {
+          "serial": "HA-PURE-3001"
+        },
+        "signature": "EmAKXgFpFH0TcY8BC0DKmLAhM7c0dMY0DtC5dXwbjrjbZwP5qkYxZ9Y08VKEXMDq8ehGT3q/imijLGUY3kt02PZoGz0KHB6gc/neBh4w6qraeqvudhx78qNkqWkchdVdfik="
+      }
+    ],
+    "tokens_in": 1121,
+    "tokens_out": 23
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "request": {
+    "system": "You are a helpful customer support assistant for Hawa Home, a smart home brand that sells the Hawa Aero ceiling fan, the Hawa Lock S1 smart door lock and the Hawa Pure RO water purifier.\n\nAnswer the customer's question. You can use the tools to control their devices.\n\nThe customer's devices:\n- fan-living: Living room fan (Hawa Aero, room: living room)\n- fan-bedroom: Bedroom fan (Hawa Aero, room: bedroom)\n- lock-main: Main door lock (Hawa Lock S1, room: main door)\n- purifier-kitchen: Kitchen purifier (Hawa Pure RO, room: kitchen)\n\nSome manual sections that may help:\n[pure/filters#how-to-replace-filters] Filters: How to Replace Filters\nUse only genuine Hawa filters. The filter service kit is HP-FK-02 (sediment + carbon) and the\nmembrane kit is HP-MB-08. Using non-genuine filters voids the warranty.\n1. Switch off the purifier and close the inlet water valve.\n2. Open the front cover and twist the old filter anticlockwise to remove it.\n3. Insert the new filter and twist clockwise until it clicks.\n4. Open the inlet valve and switch the purifier on.\n5. Reset the filter counter: press and hold the FILTER button for 5 seconds until you hear\n   2 beeps (or use the app: Pure RO > Filters > Reset).\n6. Drain the first 2 full tanks of water after a filter change; do not drink it.\nRO membrane and UV lamp replacement must be done by a Hawa technician.\n\n[general/service#tickets-and-visit-times] Service: Tickets and Visit Times\nYou can raise a service ticket in the Hawa Home app, by asking the Hawa assistant, or by calling\nsupport. A ticket needs the device, a short description of the issue and a mobile number.\nTicket numbers look like HW-100001. A technician visits within 48 hours in metro cities and\nwithin 72 hours in other cities. Visits under warranty are free. Out of warranty, the visit\ncharge is Rs 299 plus the cost of parts. Service hours are 9 AM to 9 PM, all 7 days.\nReplacement: if a product has a manufacturing defect within 7 days of delivery, Hawa replaces it.\n\n[pure/water-quality#tds-and-taste] Water Quality: TDS and Taste\nTDS (total dissolved solids) of the output water is shown on the display. The Mineraliser keeps\noutput TDS between 50 and 150 ppm; the factory setting is 80 ppm. You can adjust it in the app\n(Pure RO > Water Taste) within that range. If output TDS stays above 150 ppm for more than\n24 hours, the membrane may be worn out; raise a service ticket.\nThe Hawa Pure RO is not a medical device. It improves drinking water quality but Hawa makes no\nclaim that it treats, cures or prevents any disease. For health questions, please consult a\ndoctor.\n\n[general/warranty#coverage-periods] Warranty: Coverage Periods\nWarranty starts from the date on the purchase invoice:\n- Hawa Aero ceiling fan: 3 years on the whole fan, and 5 years on the BLDC motor.\n- Hawa Lock S1: 2 years on electronics and 5 years on the mechanical lock body.\n- Hawa Pure RO: 1 year on the purifier. Filters, the RO membrane and the UV lamp are\n  consumables and are not covered by warranty.\nRegister your product in the Hawa Home app within 30 days of purchase to get 6 extra months of\nwarranty (one time per product). You can check your warranty with your product serial number,\nfor example HA-AERO-1001. The serial number is printed on the box and on a sticker on the product.\n",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How much does the HP-MB-08 membrane kit cost?"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_device_status",
+        "description": "Get the live status of one of the user's devices (online, speed, battery, filter life).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        }
+      },
+      {
+        "name": "set_fan_speed",
+        "description": "Set the speed of a Hawa Aero fan. Speed must be an integer from 1 to 5.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string",
+              "description": "e.g. fan-living"
+            },
+            "speed": {
+              "type": "integer",
+              "description": "1 (lowest) to 5 (highest)"
+            }
+          },
+          "required": [
+            "device_id",
+            "speed"
+          ]
+        }
+      },
+      {
+        "name": "check_warranty",
+        "description": "Check warranty status for a product serial number like HA-AERO-1001.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "serial": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serial"
+          ]
+        }
+      },
+      {
+        "name": "create_service_ticket",
+        "description": "Raise a service ticket for a technician visit. Needs the device, a short issue description and the user's 10-digit Indian mobile number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "string"
+            },
+            "issue": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_id",
+            "issue",
+            "phone"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "text": "I don't have the pricing information for the HP-MB-08 membrane kit in my system. Prices for parts can vary, or you may need to speak with a Hawa technician or support agent for a quote, especially since RO membrane and UV lamp replacements must be done by a Hawa technician.",
+    "tool_calls": [],
+    "tokens_in": 1210,
+    "tokens_out": 63
+  }
+}
